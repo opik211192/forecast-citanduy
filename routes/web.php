@@ -58,5 +58,9 @@ Route::get('/dashboard/jateng', [DashboardTengahController::class, 'index'])->na
 Route::get('/hujan', [HujanController::class,'index'])->name('hujan.index');
 Route::get('/data-hujan', [HujanController::class, 'showData'])->name('hujan-data');
 
+Route::get('/home', function () {
+    return view('front');
+});
+
 
 

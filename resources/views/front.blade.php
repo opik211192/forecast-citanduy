@@ -48,12 +48,12 @@
                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-400"
                                 aria-labelledby="dropdownLargeButton">
                                 <li>
-                                    <a href="#"
+                                    <a href="{{ route('dashobard-jabar') }}"
                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Jawa
                                         Barat</a>
                                 </li>
                                 <li>
-                                    <a href="#"
+                                    <a href="{{ route('dashobard-jateng') }}"
                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Jawa
                                         Tengah</a>
                                 </li>
@@ -77,7 +77,7 @@
                 </tr>
             </thead>
             <tbody id="tableId">
-                <!-- Data cuaca per jam akan ditambahkan di sini melalui JavaScript -->
+
             </tbody>
         </table>
     </div>
@@ -86,6 +86,7 @@
     <script>
         // URL API BMKG
                 const apiUrl = 'https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/DigitalForecast-JawaBarat.xml';
+                const tbody = document.getElementById("tableId");
         
                 // Fungsi untuk mengambil data dari API BMKG
                     async function fetchData() {
@@ -118,32 +119,73 @@
 
                                 timerangeElements.forEach(function(timerangeElement) {
                                     const datetime = timerangeElement.getAttribute('datetime');
+                                    
+                                    const year = datetime.substring(0, 4);
+                                    const month = datetime.substring(4, 6);
+                                    const day = datetime.substring(6, 8);
+                                    const hour = datetime.substring(8, 10);
+                                    const minute = datetime.substring(10, 12);
+
+                                    const formattedDate = `${day}-${month}-${year} ${hour}:${minute}`;
+                                    console.log(formattedDate);
+                                    
                                     const valueElement = timerangeElement.querySelector('value');
                                     const value = valueElement.textContent.trim();
                                     
                                     
                                     if (parameterId === 'hu') {
-                                        dataHuHourly[datetime] = value;
+                                        dataHuHourly[formattedDate] = value;
                                     } else if (parameterId === 'humax') {
-                                        dataHumaxDaily[datetime] = value;
+                                        dataHumaxDaily[formattedDate] = value;
                                     }else if (parameterId === 'tmax'){
-                                        dataTmax[datetime] = value;
+                                        dataTmax[formattedDate] = value;
                                     }else if (parameterId === 'humin'){
-                                        dataHumin[datetime] = value;
+                                        dataHumin[formattedDate] = value;
                                     }else if (parameterId === 'tmin'){
-                                        dataTmin[datetime] = value;
+                                        dataTmin[formattedDate] = value;
                                     }else if (parameterId === 't'){
-                                        dataT[datetime] = value;
+                                        dataT[formattedDate] = value;
                                     }else if (parameterId === 'weather'){
-                                        dataWeather[datetime] = value;
+                                        dataWeather[formattedDate] = value;
                                     }else if (parameterId === 'wd'){
-                                        dataWd[datetime] = value;
+                                        dataWd[formattedDate] = value;
                                     }else if(parameterId === 'ws'){
-                                        dataWs[datetime] = value;
+                                        dataWs[formattedDate] = value;
                                     } 
                                 });
                                 
                             })
+
+                            for (const datetime in dataHuHourly) {
+                                if (dataHuHourly.hasOwnProperty(datetime)) {
+                                    const huHourlyValue = dataHuHourly[datetime];
+                                    const humaxDailyValue = dataHumaxDaily[datetime];
+                                    // Dapatkan nilai-nilai lain sesuai kebutuhan
+                                    
+                                    // Buat baris untuk setiap entri data
+                                    const row = document.createElement("tr");
+                                    
+                                    // Buat sel-sel untuk setiap kolom dalam tabel
+                                    const datetimeCell = document.createElement("td");
+                                    datetimeCell.textContent = datetime;
+                                    
+                                    const huHourlyCell = document.createElement("td");
+                                    huHourlyCell.textContent = huHourlyValue;
+                                    
+                                    const humaxDailyCell = document.createElement("td");
+                                    humaxDailyCell.textContent = humaxDailyValue;
+                                    
+                                    // Buat sel-sel lainnya sesuai kebutuhan
+                                    // Tambahkan sel-sel ke dalam baris
+                                    row.appendChild(datetimeCell);
+                                    row.appendChild(huHourlyCell);
+                                    row.appendChild(humaxDailyCell);
+                                    // Tambahkan sel-sel lainnya sesuai kebutuhan
+                                    
+                                    // Tambahkan baris ke dalam tbody
+                                    tbody.appendChild(row);
+                                }
+                            }
                             console.log('------hu-------');
                             console.log(dataHuHourly);
                             console.log('------humax-------');
@@ -161,36 +203,7 @@
                             console.log('-----wd--------');
                             console.log(dataWd);
                             console.log('-----ws--------');
-                            console.log(dataWs);
-                            
-                        // const parameter = banjarData.querySelector('parameter[id="t"]');
-                        // const timeranges = parameter.querySelectorAll('timerange');
-
-
-                        // //console.log(banjarData);
-        
-                        // // Mendapatkan tabel
-                        // const weatherTable = document.getElementById('weatherData');
-        
-                        // // Loop melalui elemen "timerange" untuk menampilkan data per jam
-                        // timeranges.forEach(function(timerange) {
-                        //     const time = timerange.getAttribute('datetime');
-                        //     const temperature = timerange.querySelector('value[unit="C"]').textContent;
-        
-                        //     // Membuat baris tabel untuk setiap data cuaca per jam
-                        //     const row = document.createElement('tr');
-                        //     row.innerHTML = `
-                        //         <td>${time}</td>
-                        //         <td>${temperature}°C</td>
-                        //         <td></td> <!-- Data kelembaban disini -->
-                        //         <td></td> <!-- Data cuaca disini -->
-                        //         <td></td> <!-- Data arah angin disini -->
-                        //         <td></td> <!-- Data kecepatan angin disini -->
-                        //     `;
-        
-                        //     weatherTable.appendChild(row);
-                        // });
-                       
+                            console.log(dataWs);                       
                     } catch (error) {
                         console.error('Gagal mengambil data cuaca:', error);
                     }

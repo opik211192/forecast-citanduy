@@ -1,0 +1,12 @@
+ini hanya untuk tarik data manual
+
+jalankan di command line
+
+#untuk tarik data di wilayah jawa barat
+php artisan fetch-jbarat
+
+#untuk tarik data di wilayah jawa tengah
+php artisan fetch-jtengah
+
+#kirim sms manual
+php artisan notif-hujan

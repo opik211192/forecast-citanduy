@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --}}
     {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
 
-<body>
-    <nav class="bg-white border-gray-200 dark:bg-gray-900">
+<body class="bg-gray-50">
+    <nav class="border-gray-200 dark:bg-gray-900">
         <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
             <a href="https://flowbite.com" class="flex items-center">
                 <img src="{{ asset('icon/logo_pu.png') }}" class="rounded-lg h-8 mr-3" alt="Flowbite Logo" />
@@ -27,7 +28,7 @@
             </div> --}}
         </div>
     </nav>
-    <nav class="bg-gray-50 dark:bg-gray-700">
+    <nav class="bg-gray-300 dark:bg-gray-700">
         <div class="max-w-screen-xl px-4 py-3 mx-auto">
             <div class="flex items-center">
                 <ul class="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
@@ -67,28 +68,25 @@
     <div class="container mx-auto mt-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
             <!-- Card 1 -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="text-xl font-semibold mb-2">Data 1</h2>
-                <p class="text-gray-600">Nilai: 100</p>
-            </div>
+            <a href="{{ route('dashobard-jabar') }}">
+                <div class="bg-indigo-500 hover:bg-gray-500 border-2 rounded-lg shadow p-4">
+                    <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+                        <h2 class="text-xl text-white font-semibold mb-2">Data Cuaca Jawa Barat</h2>
+                        <img width="100px" height="100px" src="{{ asset('icon/weather.png') }}" alt="logo_weather">
+                    </div>
+                </div>
+            </a>
 
             <!-- Card 2 -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="text-xl font-semibold mb-2">Data 2</h2>
-                <p class="text-gray-600">Nilai: 200</p>
-            </div>
+            <a href="{{ route('dashobard-jateng') }}">
+                <div class="bg-indigo-500 hover:bg-gray-500 border-2 rounded-lg shadow p-4">
+                    <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+                        <h2 class="text-xl text-white font-semibold mb-2">Data Cuaca Jawa Tengah</h2>
+                        <img width="100px" height="100px" src="{{ asset('icon/weather.png') }}" alt="logo_weather">
+                    </div>
+                </div>
+            </a>
 
-            <!-- Card 3 -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="text-xl font-semibold mb-2">Data 3</h2>
-                <p class="text-gray-600">Nilai: 300</p>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="text-xl font-semibold mb-2">Data 4</h2>
-                <p class="text-gray-600">Nilai: 400</p>
-            </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>

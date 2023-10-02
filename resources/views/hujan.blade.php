@@ -5,6 +5,8 @@
 <div class="col-lg-12">
     <div class="row">
         <div class="col-lg-6">
+            @if (count($groupedData) > 0 )
+
             <div class="text-center">Jawa Barat</div>
             <div class="table-responsive table-wrappe">
                 <table class="table table-bordered table-sm custom-table">
@@ -41,6 +43,12 @@
                     </tbody>
                 </table>
             </div>
+            @else
+            <div class="text-center">
+                <h3>Jawa Barat</h3>
+                <p>Tidak ada data</p>
+            </div>
+            @endif
         </div>
         <div class="col-lg-6">
             @if (count($groupedData2) > 0)
@@ -81,7 +89,10 @@
                 </table>
             </div>
             @else
-            <h3>Tidak ada data</h3>
+            <div class="text-center">
+                <h3>Jawa Tengah</h3>
+                <p>Tidak ada data</p>
+            </div>
             @endif
         </div>
     </div>

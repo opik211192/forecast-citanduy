@@ -64,155 +64,34 @@
             </div>
         </div>
     </nav>
-    <div class="container mt-5">
-        <table class="w-full">
-            <thead>
-                <tr>
-                    <th class="text-left">Waktu</th>
-                    <th class="text-left">Temperatur (°C)</th>
-                    <th class="text-left">Kelembaban (%)</th>
-                    <th class="text-left">Cuaca</th>
-                    <th class="text-left">Arah Angin</th>
-                    <th class="text-left">Kecepatan Angin (Kt)</th>
-                </tr>
-            </thead>
-            <tbody id="tableId">
+    <div class="container mx-auto mt-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
+            <!-- Card 1 -->
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-xl font-semibold mb-2">Data 1</h2>
+                <p class="text-gray-600">Nilai: 100</p>
+            </div>
 
-            </tbody>
-        </table>
+            <!-- Card 2 -->
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-xl font-semibold mb-2">Data 2</h2>
+                <p class="text-gray-600">Nilai: 200</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-xl font-semibold mb-2">Data 3</h2>
+                <p class="text-gray-600">Nilai: 300</p>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-xl font-semibold mb-2">Data 4</h2>
+                <p class="text-gray-600">Nilai: 400</p>
+            </div>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // URL API BMKG
-                const apiUrl = 'https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/DigitalForecast-JawaBarat.xml';
-                const tbody = document.getElementById("tableId");
-        
-                // Fungsi untuk mengambil data dari API BMKG
-                    async function fetchData() {
-                        try {
-                            const response = await fetch(apiUrl);
-                            const xmlText = await response.text();
-                            const parser = new DOMParser();
-                            const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                            //console.log(xmlDoc);
-                            
-                            // Mengambil elemen "area" untuk Kota Bandung
-                            const banjarData = xmlDoc.querySelector('area[description="Banjar"]');
-                            let parameterElements = banjarData.querySelectorAll('parameter');
-                            console.log(banjarData);
-
-                            // Objek untuk menyimpan data
-                            const dataHuHourly = {};
-                            const dataHumaxDaily = {};
-                            const dataTmax = {};
-                            const dataHumin = {};
-                            const dataTmin = {};
-                            const dataT = {};
-                            const dataWeather = {};
-                            const dataWd = {};
-                            const dataWs = {};
-
-                            parameterElements.forEach((parameterElement) => {
-                                const parameterId = parameterElement.getAttribute('id');
-                                const timerangeElements = parameterElement.querySelectorAll('timerange');
-
-                                timerangeElements.forEach(function(timerangeElement) {
-                                    const datetime = timerangeElement.getAttribute('datetime');
-                                    
-                                    const year = datetime.substring(0, 4);
-                                    const month = datetime.substring(4, 6);
-                                    const day = datetime.substring(6, 8);
-                                    const hour = datetime.substring(8, 10);
-                                    const minute = datetime.substring(10, 12);
-
-                                    const formattedDate = `${day}-${month}-${year} ${hour}:${minute}`;
-                                    console.log(formattedDate);
-                                    
-                                    const valueElement = timerangeElement.querySelector('value');
-                                    const value = valueElement.textContent.trim();
-                                    
-                                    
-                                    if (parameterId === 'hu') {
-                                        dataHuHourly[formattedDate] = value;
-                                    } else if (parameterId === 'humax') {
-                                        dataHumaxDaily[formattedDate] = value;
-                                    }else if (parameterId === 'tmax'){
-                                        dataTmax[formattedDate] = value;
-                                    }else if (parameterId === 'humin'){
-                                        dataHumin[formattedDate] = value;
-                                    }else if (parameterId === 'tmin'){
-                                        dataTmin[formattedDate] = value;
-                                    }else if (parameterId === 't'){
-                                        dataT[formattedDate] = value;
-                                    }else if (parameterId === 'weather'){
-                                        dataWeather[formattedDate] = value;
-                                    }else if (parameterId === 'wd'){
-                                        dataWd[formattedDate] = value;
-                                    }else if(parameterId === 'ws'){
-                                        dataWs[formattedDate] = value;
-                                    } 
-                                });
-                                
-                            })
-
-                            for (const datetime in dataHuHourly) {
-                                if (dataHuHourly.hasOwnProperty(datetime)) {
-                                    const huHourlyValue = dataHuHourly[datetime];
-                                    const humaxDailyValue = dataHumaxDaily[datetime];
-                                    // Dapatkan nilai-nilai lain sesuai kebutuhan
-                                    
-                                    // Buat baris untuk setiap entri data
-                                    const row = document.createElement("tr");
-                                    
-                                    // Buat sel-sel untuk setiap kolom dalam tabel
-                                    const datetimeCell = document.createElement("td");
-                                    datetimeCell.textContent = datetime;
-                                    
-                                    const huHourlyCell = document.createElement("td");
-                                    huHourlyCell.textContent = huHourlyValue;
-                                    
-                                    const humaxDailyCell = document.createElement("td");
-                                    humaxDailyCell.textContent = humaxDailyValue;
-                                    
-                                    // Buat sel-sel lainnya sesuai kebutuhan
-                                    // Tambahkan sel-sel ke dalam baris
-                                    row.appendChild(datetimeCell);
-                                    row.appendChild(huHourlyCell);
-                                    row.appendChild(humaxDailyCell);
-                                    // Tambahkan sel-sel lainnya sesuai kebutuhan
-                                    
-                                    // Tambahkan baris ke dalam tbody
-                                    tbody.appendChild(row);
-                                }
-                            }
-                            console.log('------hu-------');
-                            console.log(dataHuHourly);
-                            console.log('------humax-------');
-                            console.log(dataHumaxDaily);
-                            console.log('-------tmax------');
-                            console.log(dataTmax);
-                            console.log('---------humin----');
-                            console.log(dataHumin);
-                            console.log('------tmin-------');
-                            console.log(dataTmin);
-                            console.log('--------t------');
-                            console.log(dataT);
-                            console.log('-------weather------');
-                            console.log(dataWeather);
-                            console.log('-----wd--------');
-                            console.log(dataWd);
-                            console.log('-----ws--------');
-                            console.log(dataWs);                       
-                    } catch (error) {
-                        console.error('Gagal mengambil data cuaca:', error);
-                    }
-                }
-        
-                // Panggil fungsi untuk mengambil dan menampilkan data cuaca
-                fetchData();
-    </script>
-    </script>
 </body>
 
 </html>

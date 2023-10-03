@@ -51,6 +51,44 @@ class HujanController extends Controller
         });
         $dates = $data->pluck('tanggal')->unique()->values();
 
+
+//-------------------------------------Jawa Tengah -----------------------------------//
+    
+        $dataJtengah = DB::table('api_tengahs as a')
+                ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
+                ->whereDay('a.created_at', '=', $today)
+                ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
+                ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
+                ->get();
+
+        $dataJtengah2 = $dataJtengah->map(function ($item) {
+            $weatherInfo = DB::table('weather')
+                ->select('name')
+                ->where('weather_code', $item->weather_code_tertinggi)
+                ->first();
+
+            $item->nama_cuaca = $weatherInfo ? $weatherInfo->name : null;
+
+            return $item;
+         });
+        
+        $groupedData2 = $dataJtengah2->groupBy(['kecamatan', 'tanggal']);
+        $groupedData2 = $groupedData2->map(function ($items) {
+            return $items->map(function ($item) {
+                $weatherCodeTertinggi = $item->pluck('weather_code_tertinggi')->first();
+                $nama_cuaca = $item->pluck('nama_cuaca')->first();
+
+                return [
+                    'weather_code_tertinggi' => $weatherCodeTertinggi,
+                    'nama_cuaca' => $nama_cuaca,
+                ];
+            });
+        });
+        
+        $dates2 = $dataJtengah->pluck('tanggal')->unique()->values();
+
+
+        
         $weatherIcons = [
             '0' => ['icon' => '100_cerah.png', 'title' => 'Cerah'],
             '100' => ['icon' => '100_cerah.png', 'title' => 'Cerah'],
@@ -73,37 +111,6 @@ class HujanController extends Controller
 
         ];
 
-//-------------------------------------Jawa Tengah -----------------------------------//
-    
-        $dataJtengah = DB::table('api_tengahs as a')
-                ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
-                ->whereDay('a.created_at', '=', $today)
-                ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
-                ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
-                ->get();
-
-        $dataJtengah2 = $dataJtengah->map(function ($item) {
-            $weatherInfo = DB::table('weather')
-                ->select('name')
-                ->where('weather_code', $item->weather_code_tertinggi)
-                ->first();
-         });
-        
-        $groupedData2 = $dataJtengah2->groupBy(['kecamatan', 'tanggal']);
-        $groupedData2 = $groupedData2->map(function ($items) {
-            return $items->map(function ($item) {
-                $weatherCodeTertinggi = $item->pluck('weather_code_tertinggi')->first();
-                $nama_cuaca = $item->pluck('nama_cuaca')->first();
-
-                return [
-                    'weather_code_tertinggi' => $weatherCodeTertinggi,
-                    'nama_cuaca' => $nama_cuaca,
-                ];
-            });
-        });
-        
-        $dates2 = $dataJtengah->pluck('tanggal')->unique()->values();
-
         return view('hujan', [
             'groupedData' => $groupedData,
             'groupedData2' => $groupedData2,
@@ -111,6 +118,7 @@ class HujanController extends Controller
             'dates2' => $dates2,
             'weatherIcons' => $weatherIcons
         ]);
+        
     }
     
     public function showData(Request $request)

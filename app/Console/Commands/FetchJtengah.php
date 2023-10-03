@@ -24,7 +24,7 @@ class FetchJtengah extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'penarikan data cuaca jawa tengah';
 
     /**
      * Execute the console command.
@@ -118,7 +118,7 @@ class FetchJtengah extends Command
             Log::channel('single')->error('Proses impor data Jawa Tengah error: ' . $e->getMessage());
 
             // Menjadwalkan ulang perintah untuk dieksekusi dalam 30 menit (1800 detik)
-            $this->retry(1800);
+            //$this->retry(1800);
 
             // Menambahkan log ketika retry sudah berhasil
             Log::channel('single')->info('Retry berhasil dilakukan.');

@@ -5,6 +5,7 @@
     <title>Data Cuaca WS. CItanduy</title>
     <!-- Menggunakan Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="{{ asset('icon/logo_pu.png') }}" type="image/x-icon">
     <style>
         body {
             font-family: 'Roboto', sans-serif;

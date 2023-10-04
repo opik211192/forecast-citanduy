@@ -5,6 +5,7 @@
     <title>Data Cuaca WS. CItanduy</title>
     <!-- Menggunakan Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="{{ asset('icon/logo_pu.png') }}" type="image/x-icon">
     <style>
         body {
@@ -98,6 +99,34 @@
         .nav-tabs {
             border-bottom: 1px solid black;
         }
+
+        #sliding-menu {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            /* Menyembunyikan menu di awal */
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: #fff;
+            transition: left 0.3s ease-in-out;
+            z-index: 3;
+            /* Efek sliding */
+        }
+
+        #sliding-menu ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        #sliding-menu ul li {
+            padding: 10px;
+        }
+
+        #sliding-menu.open {
+            left: 0;
+            /* Menampilkan menu saat dibuka */
+        }
     </style>
 </head>
 
@@ -119,8 +148,11 @@
                     Hujan</a>
             </li>
         </ul>
-        {{-- @yield('legenda') --}}
         @yield('content')
+        @yield('legenda')
+        <div class="mt-2 mb-2">
+            <button id="toggle-menu" class="fa fa-question-circle" title="Keterngan Cuaca"></button>
+        </div>
         <p class=""><small><em>Sumber data ini dari <a href="https://data.bmkg.go.id/csv/" target="_blank"
                         class="text-dark">BMKG</a></em></small>
         </p>
@@ -130,6 +162,29 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        $("#toggle-menu").click(function () {
+        // Toggle menu dengan mengubah nilai left
+        $("#sliding-menu").toggleClass("open");
+        });
+        
+        // Menambahkan event listener untuk menutup menu ketika di luar menu diklik
+        $("body").click(function (event) {
+        // Periksa apakah pengklikan terjadi di luar menu atau tombol "Toggle Menu"
+        if (!$(event.target).closest("#sliding-menu").length &&
+        !$(event.target).is("#toggle-menu")) {
+        // Tutup menu jika pengklikan terjadi di luar menu atau tombol "Toggle Menu"
+        $("#sliding-menu").removeClass("open");
+        }
+        });
+        
+        // Mencegah event bubbling (propagasi) agar tidak memicu penutupan menu saat mengklik menu itu sendiri
+        $("#sliding-menu").click(function (event) {
+        event.stopPropagation();
+        });
+        });
+    </script>
 </body>
 
 </html>

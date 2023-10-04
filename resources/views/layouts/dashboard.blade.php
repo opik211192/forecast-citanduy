@@ -110,11 +110,11 @@
         <h2>Data Cuaca WS. Citanduy</h2>
         <ul class="nav nav-tabs mb-2">
             <li class="nav-item">
-                <a class="nav-link @yield('menuJabar')" aria-current="page" href="{{ route('dashobard-jabar') }}">Jawa
+                <a class="nav-link @yield('menuJabar')" aria-current="page" href="{{ route('dashboard-jabar') }}">Jawa
                     Barat</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @yield('menuJateng')" aria-current="page" href="{{ route('dashobard-jateng') }}">Jawa
+                <a class="nav-link @yield('menuJateng')" aria-current="page" href="{{ route('dashboard-jateng') }}">Jawa
                     Tengah</a>
             </li>
             <li class="nav-item">

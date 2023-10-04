@@ -52,8 +52,8 @@ Route::get('log-viewers', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::cl
 
 Route::get('/coba', [CobaController::class, 'index'])->name('coba-data');
 
-Route::get('/dashboard/jabar', [DashboardBaratController::class, 'index'])->name('dashobard-jabar');
-Route::get('/dashboard/jateng', [DashboardTengahController::class, 'index'])->name('dashobard-jateng');
+Route::get('/dashboard/jabar', [DashboardBaratController::class, 'index'])->name('dashboard-jabar');
+Route::get('/dashboard/jateng', [DashboardTengahController::class, 'index'])->name('dashboard-jateng');
 
 Route::get('/hujan', [HujanController::class,'index'])->name('hujan.index');
 Route::get('/data-hujan', [HujanController::class, 'showData'])->name('hujan-data');

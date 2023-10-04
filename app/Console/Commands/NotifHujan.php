@@ -90,7 +90,7 @@ class NotifHujan extends Command
         $message .= "\nWilayah Jawa Tengah Tidak Ada Hujan";
     }
 
-        $message .= "\n\nInfo lengkap silahkan kunjungi: https://www.google.com\n\n";
+        $message .= "\n\nInfo lengkap silahkan kunjungi: http://infocuaca.bbwscitanduy.id/\n\n";
         $message .= "Sumber data ini dari https://data.bmkg.go.id/csv/";
 
 

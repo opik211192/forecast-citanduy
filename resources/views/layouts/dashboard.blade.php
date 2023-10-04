@@ -22,20 +22,20 @@
             background-color: whitesmoke;
         }
 
+        .custom-table thead {
+            position: sticky;
+            top: 0;
+            background: #f2f2f2;
+            z-index: 2;
+        }
+
         .table-responsive {
             max-height: 500px;
             overflow-y: auto;
         }
 
-        table thead {
-            position: sticky;
-            top: 0;
-            background: #f2f2f2;
-            z-index: 2;
-            /* Tambahkan border bottom */
-        }
 
-        tbody td:first-child {
+        .custom-table td:first-child {
             position: sticky;
             left: 0;
             background-color: #f2f2f2;
@@ -44,28 +44,24 @@
             /* Tambahkan border right */
         }
 
-        table {
+        .custom-table {
             width: 100%;
             text-align: center;
             border-collapse: separate;
             /* Don't collapse */
             border-spacing: 0;
+            border-bottom: 2px solid;
+            border-right: 2px solid;
         }
 
-        table th {
+        .custom-table th {
             /* Apply both top and bottom borders to the <th> */
             border-top: 2px solid;
             border-bottom: 2px solid;
             border-right: 2px solid;
         }
 
-        table td {
-            /* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
-            border-bottom: 2px solid;
-            border-right: 2px solid;
-        }
-
-        table thead th {
+        .custom-table thead th {
             position: sticky;
             top: 0;
             background-color: #07559e;
@@ -123,6 +119,7 @@
                     Hujan</a>
             </li>
         </ul>
+        {{-- @yield('legenda') --}}
         @yield('content')
         <p class=""><small><em>Sumber data ini dari <a href="https://data.bmkg.go.id/csv/" target="_blank"
                         class="text-dark">BMKG</a></em></small>

@@ -39,7 +39,7 @@ Route::get('/', function () {
 //     ->get();
 
 //     dd($dataHujan);
-        return redirect()->route('dashobard-jabar');
+        return redirect()->route('dashboard-jabar');
 });
 
 Route::get('/jabar', [ApiBaratController::class, 'index'])->name('jabar.index');

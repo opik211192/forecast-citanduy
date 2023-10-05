@@ -24,20 +24,20 @@ class DashboardBaratController extends Controller
         // }
         
         //ini yang jam 1
-        // if ($currentHour < 13) {
-        //     $dataToday = $dataToday->isEmpty() ? ApiBarat::with(['jawa_barat', 'weather'])
-        //         ->whereDate('created_at', $yesterday)
-        //         ->get()
-        //     : $dataToday;
-        // }
-
-        //ini perubahannya jadi jam 12.14
-        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+        if ($currentHour < 13) {
             $dataToday = $dataToday->isEmpty() ? ApiBarat::with(['jawa_barat', 'weather'])
                 ->whereDate('created_at', $yesterday)
                 ->get()
             : $dataToday;
         }
+
+        //ini perubahannya jadi jam 12.14
+        // if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+        //     $dataToday = $dataToday->isEmpty() ? ApiBarat::with(['jawa_barat', 'weather'])
+        //         ->whereDate('created_at', $yesterday)
+        //         ->get()
+        //     : $dataToday;
+        // }
 
         $groupedData = [];
         $uniqueDates = [];

@@ -23,20 +23,20 @@ class DashboardTengahController extends Controller
             
         // }
 
-        //     if ($currentHour < 13) {
-        //     $dataToday = $dataToday->isEmpty() ? ApiTengah::with(['jawa_tengah', 'weather'])
-        //         ->whereDate('created_at', $yesterday)
-        //         ->get()
-        //     : $dataToday;
-        // }
-        
-         //ini perubahannya jadi jam 12.14
-        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+            if ($currentHour < 13) {
             $dataToday = $dataToday->isEmpty() ? ApiTengah::with(['jawa_tengah', 'weather'])
                 ->whereDate('created_at', $yesterday)
                 ->get()
             : $dataToday;
         }
+        
+         //ini perubahannya jadi jam 12.14
+        // if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+        //     $dataToday = $dataToday->isEmpty() ? ApiTengah::with(['jawa_tengah', 'weather'])
+        //         ->whereDate('created_at', $yesterday)
+        //         ->get()
+        //     : $dataToday;
+        // }
 
         $groupedData = [];
         $uniqueDates = [];

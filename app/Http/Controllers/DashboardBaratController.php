@@ -11,6 +11,8 @@ class DashboardBaratController extends Controller
     public function index()
     {
         $currentHour = Carbon::now()->hour;
+        $currentMinute = Carbon::now()->minute;
+
         $today = Carbon::now()->format('Y-m-d');
         $yesterday = Carbon::now()->subDay()->format('Y-m-d');
 
@@ -21,7 +23,16 @@ class DashboardBaratController extends Controller
             
         // }
         
-        if ($currentHour < 13) {
+        //ini yang jam 1
+        // if ($currentHour < 13) {
+        //     $dataToday = $dataToday->isEmpty() ? ApiBarat::with(['jawa_barat', 'weather'])
+        //         ->whereDate('created_at', $yesterday)
+        //         ->get()
+        //     : $dataToday;
+        // }
+
+        //ini perubahannya jadi jam 12.14
+        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
             $dataToday = $dataToday->isEmpty() ? ApiBarat::with(['jawa_barat', 'weather'])
                 ->whereDate('created_at', $yesterday)
                 ->get()

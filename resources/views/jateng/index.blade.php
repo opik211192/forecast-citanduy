@@ -58,4 +58,7 @@
 @else
 <h4 class="text-center">Belum ada data penarikan dari BMKG</h4>
 @endif
+<div class="mt-3 mb-3">
+    <x-legenda />
+</div>
 @endsection

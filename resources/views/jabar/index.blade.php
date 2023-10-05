@@ -1,25 +1,6 @@
 @extends('layouts.dashboard')
 @section('menuJabar', 'active')
 
-
-@section('legenda')
-<div class="row mt-3 mb-3">
-    <table class="">
-        <thead>
-            <tr>
-                <th>Icon</th>
-                <th>Keterangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Lorem, ipsum.</td>
-                <td>Lorem ipsum dolor sit amet.</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-@endsection
 @section('content')
 @if (count($groupedData) > 0)
 <div class="table-responsive">
@@ -75,4 +56,7 @@
 @else
 <h4 class="text-center">Belum ada data penarikan dari BMKG</h4>
 @endif
+<div class="mt-3 mb-3">
+    <x-legenda />
+</div>
 @endsection

@@ -108,10 +108,10 @@ class NotifHujan extends Command
             Log::channel('errorlog')->info("Gagal mengirim notifikasi ke Whatsapp Grup");
 
             // Menjadwalkan ulang perintah untuk dieksekusi dalam 30 menit (1800 detik)
-            $this->retry(1800);
+            // $this->retry(1800);
 
-            // Menambahkan log ketika retry sudah berhasil
-            Log::channel('single')->info('Retry berhasil dilakukan.');
+            // // Menambahkan log ketika retry sudah berhasil
+            // Log::channel('single')->info('Retry berhasil dilakukan.');
         }
     }
 }

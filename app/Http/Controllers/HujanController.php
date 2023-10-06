@@ -15,14 +15,25 @@ class HujanController extends Controller
     public function index()
     {
         $today = Carbon::now();
-         $yesterday = Carbon::yesterday();
+        $yesterday = Carbon::yesterday();
+        $currentTime = Carbon::now();
 
-        $data = DB::table('api_barats as a')
-                ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
-                ->whereDay('a.created_at', '=', $today)
-                ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
-                ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
-                ->get();
+        if ($currentTime->hour < 12 || ($currentTime->hour == 12 && $currentTime->minute < 15)) {
+                $data = DB::table('api_barats as a')
+                    ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
+                    ->whereDay('a.created_at', '=', $yesterday)
+                    ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
+                    ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
+                    ->get();
+        }else{
+                // Jika saat ini setelah jam 12:15 PM, tampilkan data dari hari ini
+                $data = DB::table('api_barats as a')
+                    ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
+                    ->whereDay('a.created_at', '=', $today)
+                    ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
+                    ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
+                    ->get();
+        }
 
         // Join dengan tabel weather
         $data2 = $data->map(function ($item) {
@@ -53,13 +64,23 @@ class HujanController extends Controller
 
 
 //-------------------------------------Jawa Tengah -----------------------------------//
-    
-        $dataJtengah = DB::table('api_tengahs as a')
-                ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
-                ->whereDay('a.created_at', '=', $today)
-                ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
-                ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
-                ->get();
+        
+        if ($currentTime->hour < 12 || ($currentTime->hour == 12 && $currentTime->minute < 15)) {
+            $dataJtengah = DB::table('api_tengahs as a')
+                    ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
+                    ->whereDay('a.created_at', '=', $yesterday)
+                    ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
+                    ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
+                    ->get();
+        }else{
+            $dataJtengah = DB::table('api_tengahs as a')
+                    ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
+                    ->whereDay('a.created_at', '=', $today)
+                    ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
+                    ->groupBy(DB::raw('DATE(a.timestamp)'), 'a.location', 'b.kecamatan')
+                    ->get();
+        }
+
 
         $dataJtengah2 = $dataJtengah->map(function ($item) {
             $weatherInfo = DB::table('weather')

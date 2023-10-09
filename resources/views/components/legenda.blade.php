@@ -22,15 +22,15 @@
                 <th>keterangan</th>
                 <td>Cerah</td>
                 <td>Cerah Berawan</td>
-                <td>Berawan</td>
+                <td>Berawan <br>(0 mm)</td>
                 <td>Berawan Tebal</td>
                 <td>Asap</td>
                 <td>Kabut</td>
                 <td>Udara Kabur</td>
-                <td>Hujan Ringan</td>
-                <td>Hujan</td>
-                <td>Hujan Lebat</td>
-                <td>Hujan Petir</td>
+                <td>Hujan Ringan <br>(0.5 – 20 mm)</td>
+                <td>Hujan <br>(20 – 50 mm)</td>
+                <td>Hujan Lebat <br>(50 – 100 mm)</td>
+                <td>Hujan Petir <br>(>150 mm)</td>
             </tr>
         </tbody>
     </table>

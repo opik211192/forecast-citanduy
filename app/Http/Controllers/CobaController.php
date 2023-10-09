@@ -15,23 +15,21 @@ class CobaController extends Controller
 {
     public function index(Request $request)
     {
+        $weatherCodes = [60, 61, 63];
         $yesterday = Carbon::yesterday();
 
-        $jawaBaratCount = DB::table('api_barats as a')
-            ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
-            ->whereDate('a.created_at', '=', $yesterday)
-            ->whereIn('a.weather_code', [60, 61, 63])
-            ->distinct()
-            ->count(DB::raw('CONCAT(a.location, b.kecamatan)')); // Menggunakan CONCAT untuk membuat nilai unik
+        $result = ApiBarat::whereIn('weather_code', $weatherCodes)
+        ->whereDay('created_at',  $yesterday)
+        ->select('kecamatan')
+        ->distinct()
+        ->count();
 
-        $jawaTengahCount = DB::table('api_tengahs as a')
-            ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
-            ->whereDate('a.created_at', '=', $yesterday)
-            ->whereIn('a.weather_code', [60, 61, 63])
-            ->distinct()
-            ->count(DB::raw('CONCAT(a.location, b.kecamatan)'));
+        $today = Carbon::now();
+        $futureDate = $today->copy()->addDays(6);
 
+        $todayFormat = $today->format('d/m/Y');
+        $futureDateFormat = $futureDate->format('d/m/Y');
 
-        dd($jawaBaratCount);
+        dd($todayFormat);
     }
 }

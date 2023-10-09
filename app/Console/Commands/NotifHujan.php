@@ -35,7 +35,7 @@ class NotifHujan extends Command
         $phone = env('WABLAS_PHONE');
         $apiKey = env('WABLAS_API_KEY');
         $today = Carbon::now();
-        $futureDate = $today->addDays(6);
+        $futureDate = $today->copy()->addDays(6);
 
         $todayFormat = $today->format('d/m/Y');
         $futureDateFormat = $futureDate->format('d/m/Y');

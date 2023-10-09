@@ -15,83 +15,23 @@ class CobaController extends Controller
 {
     public function index(Request $request)
     {
-        $phone = env('WABLAS_PHONE');
-        $apiKey = env('WABLAS_API_KEY');
-        $today = Carbon::now()->format('d/m/Y');
-        //dd($today);
+        $yesterday = Carbon::yesterday();
 
-        $jawaBarat = DB::table('api_barats')
-        ->whereIn('weather_code', [60, 61, 63])
-        ->whereDay('created_at', now()->day)
-        ->select(
-            DB::raw('SUM(CASE WHEN weather_code = 60 THEN 1 ELSE 0 END) AS count_60'),
-            DB::raw('SUM(CASE WHEN weather_code = 61 THEN 1 ELSE 0 END) AS count_61'),
-            DB::raw('SUM(CASE WHEN weather_code = 63 THEN 1 ELSE 0 END) AS count_63')
-        )
-        ->first();
+        $jawaBaratCount = DB::table('api_barats as a')
+            ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
+            ->whereDate('a.created_at', '=', $yesterday)
+            ->whereIn('a.weather_code', [60, 61, 63])
+            ->distinct()
+            ->count(DB::raw('CONCAT(a.location, b.kecamatan)')); // Menggunakan CONCAT untuk membuat nilai unik
 
-        $jawaTengah = DB::table('api_tengahs')
-        ->whereIn('weather_code', [60, 61, 63])
-        ->whereDay('created_at', now()->day)
-        ->select(
-            DB::raw('SUM(CASE WHEN weather_code = 60 THEN 1 ELSE 0 END) AS count_60'),
-            DB::raw('SUM(CASE WHEN weather_code = 61 THEN 1 ELSE 0 END) AS count_61'),
-            DB::raw('SUM(CASE WHEN weather_code = 63 THEN 1 ELSE 0 END) AS count_63')
-        )
-        ->first();
-        
-        $message = "Data Hujan di WS. Citanduy\n";
-        $message .= "Tgl: $today";
-
-    if ($jawaBarat->count_60 > 0 || $jawaBarat->count_61 > 0 || $jawaBarat->count_63 > 0) {
-        $message .= "\nJawa Barat :\n";
-        if ($jawaBarat->count_60 > 0) {
-            $message .= "Hujan Ringan di {$jawaBarat->count_60} lokasi\n";
-        }
-        if ($jawaBarat->count_61 > 0) {
-            $message .= "Hujan Sedang di {$jawaBarat->count_61} Lokasi\n";
-        }
-        if ($jawaBarat->count_63 > 0) {
-            $message .= "Hujan Lebat di {$jawaBarat->count_63} Lokasi\n";
-        }
-    }else{
-        $message.= "\nWilayah Jawa Barat Tidak Ada Hujan";
-    }
-
-    if ($jawaTengah->count_60 > 0 || $jawaTengah->count_61 > 0 || $jawaTengah->count_63 > 0) {
-        $message .= "Jawa Tengah :\n";
-        if ($jawaTengah->count_60 > 0) {
-            $message .= "Hujan Ringan di {$jawaTengah->count_60} lokasi\n";
-        }
-        if ($jawaTengah->count_61 > 0) {
-            $message .= "Hujan Sedang di {$jawaTengah->count_61} Lokasi\n";
-        }
-        if ($jawaTengah->count_63 > 0) {
-            $message .= "Hujan Lebat di {$jawaTengah->count_63} Lokasi\n";
-        }
-    }else{
-        $message .= "\nWilayah Jawa Tengah Tidak Ada Hujan";
-    }
-
-    $message .= "\n\nInfo lengkap silahkan kunjungi: https://www.google.com";
-
-    if (empty($message)) {
-        $message = "Tidak ada hujan.";
-    }
+        $jawaTengahCount = DB::table('api_tengahs as a')
+            ->leftJoin('lokasis as b', 'a.location', '=', 'b.location')
+            ->whereDate('a.created_at', '=', $yesterday)
+            ->whereIn('a.weather_code', [60, 61, 63])
+            ->distinct()
+            ->count(DB::raw('CONCAT(a.location, b.kecamatan)'));
 
 
-        $response = Http::get("https://jogja.wablas.com/api/send-message", [
-            'phone' => $phone,
-            'message' => $message,
-            'token' => $apiKey,
-            'isGroup' => 'true',
-        ]);
-
-
-        if ($response->successful()) {
-            Log::channel('single')->info("Notifikasi Ke Whatsapp Grup Terkirim");
-        }else {
-            Log::channel('errorlog')->info("Gagal mengirim notifikasi ke Whatsapp Grup");
-        }
+        dd($jawaBaratCount);
     }
 }

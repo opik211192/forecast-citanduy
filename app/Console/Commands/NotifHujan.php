@@ -32,10 +32,13 @@ class NotifHujan extends Command
      */
     public function handle()
     {
-       $phone = env('WABLAS_PHONE');
+        $phone = env('WABLAS_PHONE');
         $apiKey = env('WABLAS_API_KEY');
-        $today = Carbon::now()->format('d/m/Y');
-        //dd($today);
+        $today = Carbon::now();
+        $futureDate = $today->addDays(6);
+
+        $todayFormat = $today->format('d/m/Y');
+        $futureDateFormat = $futureDate->format('d/m/Y');
 
         $jawaBarat = DB::table('api_barats')
         ->whereIn('weather_code', [60, 61, 63])
@@ -57,11 +60,11 @@ class NotifHujan extends Command
         )
         ->first();
         
-        $message = "Data Hujan di WS. Citanduy\n";
-        $message .= "Tgl: $today\n";
+        $message = "*INFO CUACA WS. CiTANDUY*\n";
+        $message .= "Tgl: $todayFormat s.d. $futureDateFormat\n";
 
     if ($jawaBarat->count_60 > 0 || $jawaBarat->count_61 > 0 || $jawaBarat->count_63 > 0) {
-        $message .= "\nJawa Barat :\n";
+        $message .= "\n*Jawa Barat* :\n";
         if ($jawaBarat->count_60 > 0) {
             $message .= "Hujan Ringan di {$jawaBarat->count_60} lokasi\n";
         }
@@ -72,11 +75,11 @@ class NotifHujan extends Command
             $message .= "Hujan Lebat di {$jawaBarat->count_63} Lokasi\n";
         }
     }else{
-        $message.= "\nWilayah Jawa Barat Tidak Ada Hujan";
+        $message.= "\n*Wilayah Jawa Barat Tidak Ada Hujan*";
     }
 
     if ($jawaTengah->count_60 > 0 || $jawaTengah->count_61 > 0 || $jawaTengah->count_63 > 0) {
-        $message .= "Jawa Tengah :\n";
+        $message .= "*Jawa Tengah* :\n";
         if ($jawaTengah->count_60 > 0) {
             $message .= "Hujan Ringan di {$jawaTengah->count_60} lokasi\n";
         }
@@ -87,11 +90,11 @@ class NotifHujan extends Command
             $message .= "Hujan Lebat di {$jawaTengah->count_63} Lokasi\n";
         }
     }else{
-        $message .= "\nWilayah Jawa Tengah Tidak Ada Hujan";
+        $message .= "\n*Wilayah Jawa Tengah Tidak Ada Hujan*";
     }
 
-        $message .= "\n\nInfo lengkap silahkan kunjungi: http://infocuaca.bbwscitanduy.id/\n\n";
-        $message .= "Sumber data ini dari https://data.bmkg.go.id/csv/";
+        $message .= "\n\nInfo lengkap: http://infocuaca.bbwscitanduy.id/\n";
+        $message .= "Sumber data: https://data.bmkg.go.id/csv/";
 
 
         $response = Http::get("https://jogja.wablas.com/api/send-message", [

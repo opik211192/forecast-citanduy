@@ -17,7 +17,7 @@
 <body>
 
     <div class="container">
-        <h2>Data Cuaca WS. Citanduy</h2>
+        <h2 class="mt-3 mb-3">Prakiraan Cuaca Wilayah Sungai Citanduy</h2>
         {{-- <ul class="nav nav-tabs mb-2">
             <li class="nav-item">
                 <a class="nav-link @yield('menuJabar')" aria-current="page" href="{{ route('dashboard-jabar') }}">Jawa

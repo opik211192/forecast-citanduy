@@ -40,81 +40,91 @@ class NotifHujan extends Command
         $todayFormat = $today->format('d/m/Y');
         $futureDateFormat = $futureDate->format('d/m/Y');
 
-        $jawaBarat = DB::table('api_barats')
-        ->whereIn('weather_code', [60, 61, 63])
-        ->whereDay('created_at', now()->day)
-        ->select(
-            DB::raw('SUM(CASE WHEN weather_code = 60 THEN 1 ELSE 0 END) AS count_60'),
-            DB::raw('SUM(CASE WHEN weather_code = 61 THEN 1 ELSE 0 END) AS count_61'),
-            DB::raw('SUM(CASE WHEN weather_code = 63 THEN 1 ELSE 0 END) AS count_63')
-        )
-        ->first();
+        $jawa_barat = DB::select("
+            SELECT
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 60 THEN location END) AS locations_60,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 61 THEN location END) AS locations_61,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 63 THEN location END) AS locations_63
+            FROM api_barats
+            WHERE weather_code IN (60, 61, 63)
+            AND DATE(created_at) = CURDATE()");
 
-        $jawaTengah = DB::table('api_tengahs')
-        ->whereIn('weather_code', [60, 61, 63])
-        ->whereDay('created_at', now()->day)
-        ->select(
-            DB::raw('SUM(CASE WHEN weather_code = 60 THEN 1 ELSE 0 END) AS count_60'),
-            DB::raw('SUM(CASE WHEN weather_code = 61 THEN 1 ELSE 0 END) AS count_61'),
-            DB::raw('SUM(CASE WHEN weather_code = 63 THEN 1 ELSE 0 END) AS count_63')
-        )
-        ->first();
-        
+        $jawa_tengah = DB::select("
+            SELECT
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 60 THEN location END) AS locations_60,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 61 THEN location END) AS locations_61,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 63 THEN location END) AS locations_63
+            FROM api_tengahs
+            WHERE weather_code IN (60, 61, 63)
+            AND DATE(created_at) = CURDATE()");
+
         $message = "*INFO CUACA WS. CiTANDUY*\n";
         $message .= "Tgl: $todayFormat s.d. $futureDateFormat\n";
-
-    if ($jawaBarat->count_60 > 0 || $jawaBarat->count_61 > 0 || $jawaBarat->count_63 > 0) {
         $message .= "\n*Jawa Barat* :\n";
-        if ($jawaBarat->count_60 > 0) {
-            $message .= "Hujan Ringan di {$jawaBarat->count_60} lokasi\n";
-        }
-        if ($jawaBarat->count_61 > 0) {
-            $message .= "Hujan Sedang di {$jawaBarat->count_61} Lokasi\n";
-        }
-        if ($jawaBarat->count_63 > 0) {
-            $message .= "Hujan Lebat di {$jawaBarat->count_63} Lokasi\n";
-        }
-    }else{
-        $message.= "\n*Wilayah Jawa Barat Tidak Ada Hujan*";
-    }
 
-    if ($jawaTengah->count_60 > 0 || $jawaTengah->count_61 > 0 || $jawaTengah->count_63 > 0) {
-        $message .= "*Jawa Tengah* :\n";
-        if ($jawaTengah->count_60 > 0) {
-            $message .= "Hujan Ringan di {$jawaTengah->count_60} lokasi\n";
+        if (!empty($jawa_barat[0]->locations_60)) {
+            $locations_60 = explode(",", $jawa_barat[0]->locations_60);
+            $count_60 = count($locations_60);
+            $message .= "Hujan Ringan di " . $count_60 ." lokasi\n";
         }
-        if ($jawaTengah->count_61 > 0) {
-            $message .= "Hujan Sedang di {$jawaTengah->count_61} Lokasi\n";
+
+        if (!empty($jawa_barat[0]->locations_61)) {
+            $locations_61 = explode(",", $jawa_barat[0]->locations_61);
+            $count_61 = count($locations_61);
+            $message .= "Hujan Sedang di " . $count_61 ." lokasi\n";
         }
-        if ($jawaTengah->count_63 > 0) {
-            $message .= "Hujan Lebat di {$jawaTengah->count_63} Lokasi\n";
+
+        if (!empty($jawa_barat[0]->locations_63)) {
+            $locations_63 = explode(",", $jawa_barat[0]->locations_63);
+            $count_63 = count($locations_63);
+            $message .= "Hujan Lebat di " . $count_63 ." lokasi\n";
         }
-    }else{
-        $message .= "\n*Wilayah Jawa Tengah Tidak Ada Hujan*";
-    }
+
+        // Jika tidak ada data yang ditemukan di Jawa Barat, tambahkan pesan yang sesuai
+        if (empty($jawa_barat[0]->locations_60) && empty($jawa_barat[0]->locations_61) && empty($jawa_barat[0]->locations_63)) {
+            $message .= "Tidak ada data hujan untuk Jawa Barat hari ini.";
+        }
+
+        $message .= "\n*Jawa Tengah* :\n";
+
+        if (!empty($jawa_tengah[0]->locations_60)) {
+            $locations_60 = explode(",", $jawa_tengah[0]->locations_60);
+            $count_60 = count($locations_60);
+            $message .= "Hujan Ringan di " . $count_60 ." lokasi\n";
+        }
+
+        if (!empty($jawa_tengah[0]->locations_61)) {
+            $locations_61 = explode(",", $jawa_tengah[0]->locations_61);
+            $count_61 = count($locations_61);
+            $message .= "Hujan Sedang di " . $count_61 ." lokasi\n";
+        }
+
+        if (!empty($jawa_tengah[0]->locations_63)) {
+            $locations_63 = explode(",", $jawa_tengah[0]->locations_63);
+            $count_63 = count($locations_63);
+            $message .= "Hujan Lebat di " . $count_63 ." lokasi\n";
+        }
+
+        // Jika tidak ada data yang ditemukan di Jawa Tengah, tambahkan pesan yang sesuai
+        if (empty($jawa_tengah[0]->locations_60) && empty($jawa_tengah[0]->locations_61) && empty($jawa_tengah[0]->locations_63)) {
+            $message .= "Tidak ada data hujan untuk Jawa Tengah hari ini.";
+        }
 
         $message .= "\n\nInfo lengkap: http://infocuaca.bbwscitanduy.id/\n";
         $message .= "Sumber data: https://data.bmkg.go.id/csv/";
 
-
         $response = Http::get("https://jogja.wablas.com/api/send-message", [
-            'phone' => $phone,
-            'message' => $message,
-            'token' => $apiKey,
-            'isGroup' => 'true',
-        ]);
+                    'phone' => $phone,
+                    'message' => $message,
+                    'token' => $apiKey,
+                    'isGroup' => 'true',
+                ]);
 
 
         if ($response->successful()) {
             Log::channel('single')->info("Notifikasi Ke Whatsapp Grup Terkirim");
         }else {
             Log::channel('errorlog')->info("Gagal mengirim notifikasi ke Whatsapp Grup");
-
-            // Menjadwalkan ulang perintah untuk dieksekusi dalam 30 menit (1800 detik)
-            // $this->retry(1800);
-
-            // // Menambahkan log ketika retry sudah berhasil
-            // Log::channel('single')->info('Retry berhasil dilakukan.');
         }
     }
 }

@@ -15,24 +15,8 @@ class DashboardBaratController extends Controller
 
         $today = Carbon::now()->format('Y-m-d');
         $yesterday = Carbon::now()->subDay()->format('Y-m-d');
-
-        //$dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $today)->get();
-
-        // if ($dataToday->isEmpty()) {
-        //     $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $yesterday)->get();
-            
-        // }
-        
-        //ini yang jam 1
-        // if ($currentHour < 13) {
-        //     $dataToday = $dataToday->isEmpty() ? ApiBarat::with(['jawa_barat', 'weather'])
-        //         ->whereDate('created_at', $yesterday)
-        //         ->get()
-        //     : $dataToday;
-        // }
-        
         //ini perubahannya jadi jam 12.14
-        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+        if ($currentHour < 6 || ($currentHour == 6 && $currentMinute < 8)) {
              $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $yesterday)->get();
         } else {
             $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $today)->get();
@@ -41,6 +25,7 @@ class DashboardBaratController extends Controller
         $groupedData = [];
         $uniqueDates = [];
         $hoursInDay = range(0, 21, 3);
+
 
         $weatherIcons = [
             '0' => ['icon' => '100_cerah.png', 'title' => 'Cerah'],

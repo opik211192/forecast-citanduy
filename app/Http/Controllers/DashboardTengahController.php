@@ -31,7 +31,7 @@ class DashboardTengahController extends Controller
         // }
         
          //ini perubahannya jadi jam 12.14
-        if ($currentHour < 6 || ($currentHour == 6 && $currentMinute < 8)) {
+        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
             $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $yesterday)->get();
         } else {
             $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $today)->get();

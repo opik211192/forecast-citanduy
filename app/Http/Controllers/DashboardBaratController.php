@@ -16,7 +16,7 @@ class DashboardBaratController extends Controller
         $today = Carbon::now()->format('Y-m-d');
         $yesterday = Carbon::now()->subDay()->format('Y-m-d');
         //ini perubahannya jadi jam 12.14
-        if ($currentHour < 6 || ($currentHour == 6 && $currentMinute < 8)) {
+        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
              $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $yesterday)->get();
         } else {
             $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $today)->get();

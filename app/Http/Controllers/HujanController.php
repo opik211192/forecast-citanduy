@@ -19,7 +19,7 @@ class HujanController extends Controller
         $currentTime = Carbon::now();
 
         //if ($currentTime->hour < 12 || ($currentTime->hour == 12 && $currentTime->minute < 15)) {
-        if ($currentTime->hour < 6 || ($currentTime->hour == 6 && $currentTime->minute < 8)) {
+        if ($currentTime->hour < 12 || ($currentTime->hour == 12 && $currentTime->minute < 15)) {
                 $data = DB::table('api_barats as a')
                     ->select(DB::raw('DATE(a.timestamp) AS tanggal'), 'a.location', 'b.kecamatan', DB::raw('MAX(a.weather_code) AS weather_code_tertinggi'))
                     ->whereDay('a.created_at', '=', $yesterday)

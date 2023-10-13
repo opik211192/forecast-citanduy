@@ -15,20 +15,6 @@ class DashboardTengahController extends Controller
 
         $today = Carbon::now()->format('Y-m-d');
         $yesterday = Carbon::now()->subDay()->format('Y-m-d');
-
-        //$dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $today)->get();
-
-        // if ($dataToday->isEmpty()) {
-        //     $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $yesterday)->get();
-            
-        // }
-
-        //     if ($currentHour < 13) {
-        //     $dataToday = $dataToday->isEmpty() ? ApiTengah::with(['jawa_tengah', 'weather'])
-        //         ->whereDate('created_at', $yesterday)
-        //         ->get()
-        //     : $dataToday;
-        // }
         
          //ini perubahannya jadi jam 12.14
         if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {

@@ -110,7 +110,7 @@ class NotifHujan extends Command
             $message .= "Tidak ada data hujan untuk Jawa Tengah hari ini.";
         }
 
-        $message .= "\n\nInfo lengkap: http://infocuaca.bbwscitanduy.id/\n";
+        $message .= "\n\nInfo lengkap: http://infocuaca.bbwscitanduy.id/dashboard/jabar\n";
         $message .= "Sumber data: https://data.bmkg.go.id/csv/";
 
         $response = Http::get("https://jogja.wablas.com/api/send-message", [

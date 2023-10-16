@@ -28,7 +28,7 @@
                 <td>Kabut</td>
                 <td>Udara Kabur</td>
                 <td>Hujan Ringan <br>(0.5 – 20 mm)</td>
-                <td>Hujan <br>(20 – 50 mm)</td>
+                <td>Hujan Sedang <br>(20 – 50 mm)</td>
                 <td>Hujan Lebat <br>(50 – 100 mm)</td>
                 <td>Hujan Petir</td>
             </tr>

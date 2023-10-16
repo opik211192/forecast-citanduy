@@ -42,7 +42,7 @@ class DashboardBaratController extends Controller
             '10' => ['icon' => '10_asap.png', 'title' => 'Asap'],
             '45' => ['icon' => '45_kabut.png', 'title' => 'Kabut'],
             '60' => ['icon' => '60_hujan_ringan.png', 'title' => 'Hujan Ringan'],
-            '61' => ['icon' => '61_hujan.png', 'title' => 'Hujan'],
+            '61' => ['icon' => '61_hujan.png', 'title' => 'Hujan Sedang'],
             '63' => ['icon' => '63_hujan_lebat.png', 'title' => 'Hujan Lebat'],
             '95' => ['icon' => '95_97_hujan_petir.png', 'title' => 'Hujan Petir'],
             '97' => ['icon' => '95_97_hujan_petir.png', 'title' => 'Hujan Petir'],

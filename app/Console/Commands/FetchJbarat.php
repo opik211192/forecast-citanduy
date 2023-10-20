@@ -2,13 +2,14 @@
 
 namespace App\Console\Commands;
 
-use League\Csv\Reader;
-use App\Models\ApiBarat;
 use App\Models\Hujan;
 use App\Models\Jbarat;
 use App\Models\Lokasi;
+use League\Csv\Reader;
+use App\Models\ApiBarat;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 
 class FetchJbarat extends Command
 {
@@ -33,7 +34,37 @@ class FetchJbarat extends Command
      */
     public function handle()
     {
-        try {
+       $maxRetries = 3; // Jumlah maksimum percobaan
+       $retryCount = 0;
+
+        while ($retryCount < $maxRetries) {
+            try {
+                $this->doImport(); // Fungsi yang melakukan impor data
+
+                Log::channel('single')->info('Proses import data Jawa Tengah berhasil.');
+                break; // Keluar dari loop jika berhasil
+            } catch (\Exception $e) {
+                $retryCount++;
+                Log::channel('single')->error('Proses import data Jawa Tengah error: ' . $e->getMessage());
+
+                if ($retryCount < $maxRetries) {
+                    //$delay = pow(120, $retryCount); // Exponential backoff
+                    $delay = 120;
+                    Log::channel('single')->info("Menjadwalkan ulang eksekusi dalam {$delay} detik...");
+                    sleep($delay);
+
+                    // Jalankan kembali perintah
+                    Artisan::call('fetch-jbarat');
+                } else {
+                    Log::channel('single')->error('Percobaan maksimum telah dicapai. Menghentikan eksekusi.');
+                }
+            }
+        }
+    }
+
+    protected function doImport()
+    {
+         try {
             Log::channel('single')->info('Memulai proses import data Jawa Barat.');
             
             $csvFile = 'https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/CSV/kecamatanforecast-jawabarat.csv';

@@ -53,6 +53,8 @@ Route::get('log-viewers', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::cl
 Route::get('/coba', [CobaController::class, 'index'])->name('coba-data');
 
 Route::get('/dashboard/jabar', [DashboardBaratController::class, 'index'])->name('dashboard-jabar');
+Route::get('/dashboard/jabar/cari', [DashboardBaratController::class, 'filter'])->name('dashboard.cari');
+
 Route::get('/dashboard/jateng', [DashboardTengahController::class, 'index'])->name('dashboard-jateng');
 
 Route::get('/hujan', [HujanController::class,'index'])->name('hujan.index');

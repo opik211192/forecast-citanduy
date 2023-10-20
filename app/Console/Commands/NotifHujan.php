@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Artisan;
 
 class NotifHujan extends Command
 {
@@ -31,6 +32,46 @@ class NotifHujan extends Command
      * @return int
      */
     public function handle()
+    {
+       $maxRetries = 3; // Jumlah maksimum percobaan
+       $retryCount = 0;
+       $notificationSent = false;
+
+        while ($retryCount < $maxRetries) {
+            try {
+                $this->sendNotification(); // Fungsi yang mengirim notifikasi
+
+                Log::channel('single')->info('Notifikasi ke Whatsapp berhasil terkirim.');
+
+                // Jika berhasil, tandai bahwa pesan notifikasi sudah dikirim
+                $notificationSent = true;
+
+                break; // Keluar dari loop jika berhasil
+            } catch (\Exception $e) {
+                $retryCount++;
+                Log::channel('single')->error('Gagal mengirim notifikasi ke Whatsapp: ' . $e->getMessage());
+
+                if ($retryCount < $maxRetries) {
+                    //$delay = pow(2, $retryCount); // Exponential backoff
+                    $delay = 60;
+                    Log::channel('single')->info("Menjadwalkan ulang pengiriman dalam {$delay} detik...");
+                    sleep($delay);
+
+                    // Jalankan kembali perintah
+                    Artisan::call('notif-hujan');
+                } else {
+                    Log::channel('errorlog')->error('Percobaan maksimum telah dicapai. Menghentikan pengiriman.');
+
+                    // Jika pesan notifikasi belum dikirim, kirim pesan notifikasi
+                    if (!$notificationSent) {
+                        $this->sendNotification();
+                    }
+                }
+            }
+        }
+    }
+
+    protected function sendNotification()
     {
         $phone = env('WABLAS_PHONE');
         $apiKey = env('WABLAS_API_KEY');
@@ -58,7 +99,8 @@ class NotifHujan extends Command
             WHERE weather_code IN (60, 61, 63)
             AND DATE(created_at) = CURDATE()");
 
-        $message = "*INFO CUACA WS. CiTANDUY*\n";
+        $message = "*PESAN INI BUKAN DARI SERVER, INI PESAN PERCOBAAAN koneksi diputuskan dalm 3 menit*\n";
+        $message .= "*INFO CUACA WS. CiTANDUY*\n";
         $message .= "Tgl: $todayFormat s.d. $futureDateFormat\n";
         $message .= "\n*Jawa Barat* :\n";
 
@@ -117,7 +159,7 @@ class NotifHujan extends Command
                     'phone' => $phone,
                     'message' => $message,
                     'token' => $apiKey,
-                    'isGroup' => 'true',
+                    'isGroup' => 'false',
                 ]);
 
 

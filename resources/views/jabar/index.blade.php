@@ -2,6 +2,34 @@
 @section('menuJabar', 'active')
 
 @section('content')
+<form action="{{ route('dashboard.cari') }}" method="get">
+    <div class="">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="kabupaten">Kabupaten:</label>
+                <select name="kabupaten" id="kabupaten" class="form-control">
+                    <option value="">Semua Kabupaten</option>
+                    @foreach ($kabupatenList as $kabupaten)
+                    <option value="{{ $kabupaten }}">{{ $kabupaten }}</option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </div>
+        {{-- <div class="col-md-4">
+            <div class="form-group">
+                <label for="weather_code">Kode Cuaca:</label>
+                <select name="weather_code" id="weather_code" class="form-control">
+                    <option value="">Semua Kode Cuaca</option>
+                    @foreach ($weatherList as $code)
+                    <option value="{{ $code->id }}">{{ $code->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div> --}}
+    </div>
+</form>
+
 @if (count($groupedData) > 0)
 <div class="table-responsive">
     <table class="table table-bordered table-sm custom-table table-hover">

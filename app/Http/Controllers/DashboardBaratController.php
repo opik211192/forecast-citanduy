@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ApiBarat;
+use App\Models\Lokasi;
+use App\Models\Weather;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -21,6 +23,11 @@ class DashboardBaratController extends Controller
         } else {
             $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $today)->get();
         }
+
+        $kabupatenList = Lokasi::where('provinsi', 'Jawa Barat')
+                        ->distinct()
+                        ->pluck('kabupaten');
+        $weatherList = Weather::all();
 
         $groupedData = [];
         $uniqueDates = [];
@@ -77,12 +84,21 @@ class DashboardBaratController extends Controller
             ];
         }
 
-            //dd($locationName)
+        //dd($kabupatenList);
      
         return view('jabar.index', [
             'groupedData' => $groupedData,
             'uniqueDates' => $uniqueDates,
             'hoursInDay' => $hoursInDay,
+            'kabupatenList' => $kabupatenList,
+            'weatherList' => $weatherList,
         ]);
+    }
+
+    public function filter(Request $request)
+    {
+        $kabupaten = $request->input('kabupaten');
+        //$lokasi = Lokasi::where('')
+        echo "$kabupaten";
     }
 }

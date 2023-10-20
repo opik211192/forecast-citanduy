@@ -16,8 +16,13 @@ class ApiBarat extends Model
     {
         //return $this->belongsTo(Jbarat::class, 'location', 'location');
         return $this->belongsTo(Lokasi::class, 'location', 'location')
-                ->where('provinsi', 'Jawa Barat');
+               ->where('provinsi', 'Jawa Barat');
     }
+    
+    // public function kabupaten()
+    // {
+    //     return tj
+    // }
 
     public function weather()
     {

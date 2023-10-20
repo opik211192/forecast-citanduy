@@ -9,29 +9,45 @@ use App\Models\Jtengah;
 use App\Models\ApiTengah;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 
 class FetchJtengah extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'fetch-jtengah';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'penarikan data cuaca jawa tengah';
+    protected $description = 'Penarikan data cuaca Jawa Tengah';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
+    {
+        $maxRetries = 3; // Jumlah maksimum percobaan
+        $retryCount = 0;
+
+        while ($retryCount < $maxRetries) {
+            try {
+                $this->doImport(); // Fungsi yang melakukan impor data
+
+                Log::channel('single')->info('Proses import data Jawa Tengah berhasil.');
+                break; // Keluar dari loop jika berhasil
+            } catch (\Exception $e) {
+                $retryCount++;
+                Log::channel('single')->error('Proses import data Jawa Tengah error: ' . $e->getMessage());
+
+                if ($retryCount < $maxRetries) {
+                    //$delay = pow(2, $retryCount); // Exponential backoff
+                    $delay = 120;
+                    Log::channel('single')->info("Menjadwalkan ulang eksekusi dalam {$delay} detik...");
+                    sleep($delay);
+
+                    // Jalankan kembali perintah
+                    Artisan::call('fetch-jtengah');
+                } else {
+                    Log::channel('single')->error('Percobaan maksimum telah dicapai. Menghentikan eksekusi.');
+                }
+            }
+        }
+    }
+
+    protected function doImport()
     {
          try {
             

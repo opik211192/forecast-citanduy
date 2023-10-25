@@ -113,7 +113,7 @@ class NotifHujan extends Command
         $message .= "\n\nInfo lengkap: http://infocuaca.bbwscitanduy.id/dashboard/jabar\n";
         $message .= "Sumber data: https://data.bmkg.go.id/csv/";
 
-        $response = Http::get("https://jogja.wablas.com/api/send-message", [
+        $response = Http::retry(3, 3000)->get("https://jogja.wablas.com/api/send-message", [
                     'phone' => $phone,
                     'message' => $message,
                     'token' => $apiKey,

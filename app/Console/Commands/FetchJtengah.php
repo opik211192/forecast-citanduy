@@ -5,10 +5,11 @@ namespace App\Console\Commands;
 use App\Models\Hujan;
 use App\Models\Lokasi;
 use League\Csv\Reader;
-use App\Models\Jtengah;
 use App\Models\ApiTengah;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Exception;
 
 class FetchJtengah extends Command
 {
@@ -33,11 +34,20 @@ class FetchJtengah extends Command
      */
     public function handle()
     {
+        $maxRetries = 3; // Jumlah maksimum percobaan
+        $retryDelay = 60; // Waktu penundaan antara percobaan (dalam detik)
+
          try {
             
-            $csvFile =  "https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/CSV/kecamatanforecast-jawatengah.csv";
-            Log::channel('single')->info('Memulai proses import data Jawa Tengah.');
-            $csvContent = file_get_contents($csvFile);
+           $response = Http::retry($maxRetries, $retryDelay)
+                        ->timeout(20)
+                        ->get("https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/CSV/kecamatanforecast-jawatengah.csv");
+
+            if ($response->failed()) {
+                throw new Exception('Gagal mengambil file CSV.');
+            }
+
+            $csvContent = $response->body();
             
             //$tempFile = tempnam(sys_get_temp_dir(), 'csv');
             $tempFile = storage_path('app/temp') . '/' . uniqid('csv_', true) . '.csv';
@@ -117,11 +127,14 @@ class FetchJtengah extends Command
             // Tangani error dan log pesan error
             Log::channel('single')->error('Proses impor data Jawa Tengah error: ' . $e->getMessage());
 
+            Log::channel('single')->error('Maksimum percobaan telah tercapai. Tidak dapat mengimpor data.');
+
+
             // Menjadwalkan ulang perintah untuk dieksekusi dalam 30 menit (1800 detik)
             //$this->retry(1800);
 
             // Menambahkan log ketika retry sudah berhasil
-            Log::channel('single')->info('Retry berhasil dilakukan.');
+            //Log::channel('single')->info('Retry berhasil dilakukan.');
         }
     }
 }

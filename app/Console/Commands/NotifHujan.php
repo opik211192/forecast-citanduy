@@ -113,18 +113,49 @@ class NotifHujan extends Command
         $message .= "\n\nInfo lengkap: http://infocuaca.bbwscitanduy.id/dashboard/jabar\n";
         $message .= "Sumber data: https://data.bmkg.go.id/csv/";
 
-        $response = Http::retry(3, 3000)->get("https://jogja.wablas.com/api/send-message", [
+       $response = Http::timeout(30)->get("https://jogja.wablas.com/api/send-message", [
+            'phone' => $phone,
+            'message' => $message,
+            'token' => $apiKey,
+            'isGroup' => 'true',
+        ]);
+
+        if ($response->successful()) {
+            Log::channel('single')->info("Notifikasi Ke Whatsapp Grup Terkirim");
+        } else {
+            $retryCount = 0;
+            $retryLimit = 3;
+            $retryInterval = 1000; // 1 detik
+            $sentSuccessfully = false; // Variabel bantu
+
+            while ($retryCount < $retryLimit) {
+                if ($sentSuccessfully) {
+                    break; // Keluar dari loop jika pengiriman sudah berhasil sebelumnya
+                }
+
+                // Tunggu sebentar sebelum mencoba lagi
+                usleep($retryInterval * 1000); // Mengonversi ke mikrodetik
+
+                // Coba kirim ulang permintaan
+                $response = Http::timeout(30)->get("https://jogja.wablas.com/api/send-message", [
                     'phone' => $phone,
                     'message' => $message,
                     'token' => $apiKey,
                     'isGroup' => 'true',
                 ]);
 
+                if ($response->successful()) {
+                    Log::channel('single')->info("Notifikasi Ke Whatsapp Grup Terkirim setelah mencoba lagi");
+                    $sentSuccessfully = true; // Tandai bahwa pengiriman berhasil
+                }
 
-        if ($response->successful()) {
-            Log::channel('single')->info("Notifikasi Ke Whatsapp Grup Terkirim");
-        }else {
-            Log::channel('errorlog')->info("Gagal mengirim notifikasi ke Whatsapp Grup");
+                $retryCount++;
+            }
+
+            if (!$sentSuccessfully) {
+                Log::channel('errorlog')->info("Gagal mengirim notifikasi ke Whatsapp Grup setelah $retryLimit percobaan.");
+            }
         }
+
     }
 }

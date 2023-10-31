@@ -15,24 +15,26 @@
                 <li class="nav-item">
                     <a class="nav-link @yield('menuJabar')" href="{{ route('dashboard-jabar') }}">Jawa Barat</a>
                 </li>
-                {{-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link @yield('menuJateng')" href="{{ route('dashboard-jateng') }}">Jawa Tengah</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link @yield('menuHujan')" href="{{ route('hujan.index') }}">Data Hujan</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Data Hujan
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item @yield('menuHujanJabar')" href="{{ route('hujan.jabar') }}">Jawa
+                            Barat</a>
+                        <a class="dropdown-item @yield('menuHujanJateng')" href="{{ route('hujan.jateng') }}">Jawa
+                            Tengah</a>
+                        {{-- <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a> --}}
+                    </div>
                 </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link @yield('menuHujan')" href="{{ route('hujan.index') }}">Data Hujan</a>
+                </li> --}}
             </ul>
             {{-- <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

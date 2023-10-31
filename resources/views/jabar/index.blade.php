@@ -2,12 +2,40 @@
 @section('menuJabar', 'active')
 
 @section('content')
+<div class="text-center mt-3 mb-2">
+    <h5>Data Wilayah Jawa Barat</h5>
+</div>
+<form action="{{ route('jabar.filter') }}">
+    <div class="row justify-content-center mt-2 mb-2">
+        <div class="col-lg-4">
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <label for="kabupaten" class="input-group-text">Cari</label>
+                </div>
+                <select name="kabupaten" id="kabupaten" class="custom-select">
+                    <option value="">Semua</option>
+                    @foreach ($kabupatenList as $kabupaten)
+                    <option value="{{ $kabupaten }}" {{ $kabupaten==$selectedKabupaten ? 'selected' : '' }}>
+                        {{ $kabupaten }}
+                    </option>
+                    @endforeach
+                </select>
+                {{-- <div class="input-group-append ml-auto">
+                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="Cari">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div> --}}
+            </div>
+        </div>
+    </div>
+</form>
+
 @if (count($groupedData) > 0)
 <div class="table-responsive">
     <table class="table table-bordered table-sm custom-table table-hover">
         <thead>
             <tr>
-                <th class="sticky-col">Nama Lokasi</th>
+                <th class="sticky-col">Nama Kecamatan</th>
                 {{-- Looping tanggal --}}
                 @foreach ($uniqueDates as $date)
                 <th colspan="{{ count($hoursInDay) }}">{{ $date }}</th>
@@ -59,4 +87,20 @@
 <div class="mt-3 mb-3">
     <x-legenda />
 </div>
+@push('script')
+<script>
+    const selectElement = document.getElementById('kabupaten');
+    
+        selectElement.addEventListener('change', function() {
+            const selectedValue = selectElement.value;
+    
+            if (selectedValue === '') {
+                window.location.href = '{{ route("dashboard-jabar") }}';
+            } else {
+                //const kabupaten = selectedValue.replace(/ /g, '+');
+                window.location.href = `{{ route("jabar.filter") }}?kabupaten=${selectedValue}`;
+            }
+        });
+</script>
+@endpush
 @endsection

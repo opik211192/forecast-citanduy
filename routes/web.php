@@ -53,9 +53,19 @@ Route::get('log-viewers', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::cl
 Route::get('/coba', [CobaController::class, 'index'])->name('coba-data');
 
 Route::get('/dashboard/jabar', [DashboardBaratController::class, 'index'])->name('dashboard-jabar');
-Route::get('/dashboard/jateng', [DashboardTengahController::class, 'index'])->name('dashboard-jateng');
+Route::get('/dashboard/jabar/cari', [DashboardBaratController::class, 'filter'])->name('jabar.filter');
 
-Route::get('/hujan', [HujanController::class,'index'])->name('hujan.index');
+Route::get('/dashboard/jateng', [DashboardTengahController::class, 'index'])->name('dashboard-jateng');
+Route::get('/dashboard/jateng/cari', [DashboardTengahController::class, 'filter'])->name('jateng.filter');
+
+
+Route::get('/hujan/jabar', [HujanController::class,'hujanJabar'])->name('hujan.jabar');
+Route::get('/hujan/jabar/cari', [HujanController::class, 'filterJabar'])->name('hujan.filterJabar');
+
+Route::get('/hujan/jateng', [HujanController::class,'hujanJateng'])->name('hujan.jateng');
+Route::get('/hujan/jateng/cari', [HujanController::class, 'filterJateng'])->name('hujan.filterJateng');
+
+
 Route::get('/data-hujan', [HujanController::class, 'showData'])->name('hujan-data');
 
 

@@ -32,8 +32,10 @@ class NotifHujan extends Command
      */
     public function handle()
     {
-        $phone = env('WABLAS_PHONE');
-        $apiKey = env('WABLAS_API_KEY');
+        //$phone = env('WABLAS_PHONE');
+        $phone = '120363169063128335';
+        //$apiKey = env('WABLAS_API_KEY');
+        $apiKey = '3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS';
         $today = Carbon::now();
         $futureDate = $today->copy()->addDays(6);
 

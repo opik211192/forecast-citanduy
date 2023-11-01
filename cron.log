@@ -1,0 +1,207 @@
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10044 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=Data%20Hujan%20di%20WS.%20Citanduy%0ATgl%3A%2006%2F10%2F2023%0A%0AJawa%20Barat%20%3A%0AHujan%20Ringan%20di%2043%20lokasi%0AJawa%20Tengah%20%3A%0AHujan%20Ringan%20di%2052%20lokasi%0AHujan%20Sedang%20di%2013%20Lokasi%0A%0A%0AInfo%20lengkap%20silahkan%20kunjungi%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2F%0A%0ASumber%20data%20ini%20dari%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+24 vendor frames [22m
+  25  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:101
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+13 vendor frames [22m
+  39  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10007 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2011%2F10%2F2023%20s.d.%2017%2F10%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0ATidak%20ada%20data%20hujan%20untuk%20Jawa%20Barat%20hari%20ini.%0A%2AJawa%20Tengah%2A%20%3A%0ATidak%20ada%20data%20hujan%20untuk%20Jawa%20Tengah%20hari%20ini.%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2F%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+24 vendor frames [22m
+  25  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:120
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+13 vendor frames [22m
+  39  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10009 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2012%2F10%2F2023%20s.d.%2018%2F10%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0AHujan%20Ringan%20di%2032%20lokasi%0A%0A%2AJawa%20Tengah%2A%20%3A%0AHujan%20Ringan%20di%2017%20lokasi%0A%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2F%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+24 vendor frames [22m
+  25  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:120
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+13 vendor frames [22m
+  39  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10001 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2017%2F10%2F2023%20s.d.%2023%2F10%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0AHujan%20Ringan%20di%2028%20lokasi%0AHujan%20Sedang%20di%2013%20lokasi%0A%0A%2AJawa%20Tengah%2A%20%3A%0AHujan%20Ringan%20di%2017%20lokasi%0A%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2Fdashboard%2Fjabar%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+24 vendor frames [22m
+  25  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:120
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+13 vendor frames [22m
+  39  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10000 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2018%2F10%2F2023%20s.d.%2024%2F10%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0AHujan%20Ringan%20di%2077%20lokasi%0AHujan%20Sedang%20di%2036%20lokasi%0AHujan%20Lebat%20di%201%20lokasi%0A%0A%2AJawa%20Tengah%2A%20%3A%0ATidak%20ada%20data%20hujan%20untuk%20Jawa%20Tengah%20hari%20ini.%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2Fdashboard%2Fjabar%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+24 vendor frames [22m
+  25  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:120
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+13 vendor frames [22m
+  39  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10010 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2020%2F10%2F2023%20s.d.%2026%2F10%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0AHujan%20Ringan%20di%2078%20lokasi%0AHujan%20Sedang%20di%2021%20lokasi%0A%0A%2AJawa%20Tengah%2A%20%3A%0AHujan%20Ringan%20di%2017%20lokasi%0A%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2Fdashboard%2Fjabar%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+24 vendor frames [22m
+  25  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:120
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+13 vendor frames [22m
+  39  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10039 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2024%2F10%2F2023%20s.d.%2030%2F10%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0AHujan%20Ringan%20di%2066%20lokasi%0AHujan%20Sedang%20di%2024%20lokasi%0A%0A%2AJawa%20Tengah%2A%20%3A%0AHujan%20Ringan%20di%2011%20lokasi%0AHujan%20Sedang%20di%206%20lokasi%0A%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2Fdashboard%2Fjabar%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+24 vendor frames [22m
+  25  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:120
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+13 vendor frames [22m
+  39  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10027 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?phone=120363169063128335&message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2031%2F10%2F2023%20s.d.%2006%2F11%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0AHujan%20Ringan%20di%2082%20lokasi%0A%0A%2AJawa%20Tengah%2A%20%3A%0AHujan%20Ringan%20di%2022%20lokasi%0AHujan%20Sedang%20di%205%20lokasi%0A%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2Fdashboard%2Fjabar%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&token=3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+22 vendor frames [22m
+  23  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:120
+      Illuminate\Http\Client\PendingRequest::get()
+
+      [2m+13 vendor frames [22m
+  37  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+
+   Illuminate\Http\Client\ConnectionException 
+
+  cURL error 28: Resolving timed out after 10011 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://jogja.wablas.com/api/send-message?message=%2AINFO%20CUACA%20WS.%20CiTANDUY%2A%0ATgl%3A%2001%2F11%2F2023%20s.d.%2007%2F11%2F2023%0A%0A%2AJawa%20Barat%2A%20%3A%0AHujan%20Ringan%20di%2082%20lokasi%0AHujan%20Sedang%20di%2056%20lokasi%0A%0A%2AJawa%20Tengah%2A%20%3A%0AHujan%20Ringan%20di%2022%20lokasi%0AHujan%20Sedang%20di%2017%20lokasi%0A%0A%0AInfo%20lengkap%3A%20http%3A%2F%2Finfocuaca.bbwscitanduy.id%2Fdashboard%2Fjabar%0ASumber%20data%3A%20https%3A%2F%2Fdata.bmkg.go.id%2Fcsv%2F&isGroup=true
+
+  at /var/www/infocuaca/vendor/laravel/framework/src/Illuminate/Http/Client/PendingRequest.php:855
+    851▕                 });
+    852▕             } catch (ConnectException $e) {
+    853▕                 $this->dispatchConnectionFailedEvent();
+    854▕ 
+  ➜ 855▕                 throw new ConnectionException($e->getMessage(), 0, $e);
+    856▕             }
+    857▕         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
+    858▕             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
+    859▕
+
+      [2m+22 vendor frames [22m
+  23  /var/www/infocuaca/app/Console/Commands/NotifHujan.php:144
+      Illuminate\Http\Client\PendingRequest::get()
+
+      [2m+13 vendor frames [22m
+  37  /var/www/infocuaca/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()

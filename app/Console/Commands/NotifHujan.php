@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Hujan;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -46,18 +45,22 @@ class NotifHujan extends Command
             SELECT
                 GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 60 THEN location END) AS locations_60,
                 GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 61 THEN location END) AS locations_61,
-                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 63 THEN location END) AS locations_63
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 63 THEN location END) AS locations_63,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 95 THEN location END) AS locations_95,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 97 THEN location END) AS locations_97
             FROM api_barats
-            WHERE weather_code IN (60, 61, 63)
+            WHERE weather_code IN (60, 61, 63, 95, 97)
             AND DATE(created_at) = CURDATE()");
 
         $jawa_tengah = DB::select("
             SELECT
                 GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 60 THEN location END) AS locations_60,
                 GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 61 THEN location END) AS locations_61,
-                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 63 THEN location END) AS locations_63
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 63 THEN location END) AS locations_63,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 95 THEN location END) AS locations_95,
+                GROUP_CONCAT(DISTINCT CASE WHEN weather_code = 97 THEN location END) AS locations_97
             FROM api_tengahs
-            WHERE weather_code IN (60, 61, 63)
+            WHERE weather_code IN (60, 61, 63, 95, 97)
             AND DATE(created_at) = CURDATE()");
 
         $message = "*INFO CUACA WS. CiTANDUY*\n";
@@ -82,8 +85,21 @@ class NotifHujan extends Command
             $message .= "Hujan Lebat di " . $count_63 ." lokasi\n";
         }
 
+        if (!empty($jawa_barat[0]->locations_95)) {
+            $locations_95 = explode(",", $jawa_barat[0]->locations_95);
+            $count_95 = count($locations_95);
+            $message .= "Hujan Lebat di " . $count_95 ." lokasi\n";
+        }
+
+         if (!empty($jawa_barat[0]->locations_97)) {
+            $locations_97 = explode(",", $jawa_barat[0]->locations_97);
+            $count_97 = count($locations_97);
+            $message .= "Hujan Lebat di " . $count_97 ." lokasi\n";
+        }
+        
+
         // Jika tidak ada data yang ditemukan di Jawa Barat, tambahkan pesan yang sesuai
-        if (empty($jawa_barat[0]->locations_60) && empty($jawa_barat[0]->locations_61) && empty($jawa_barat[0]->locations_63)) {
+        if (empty($jawa_barat[0]->locations_60) && empty($jawa_barat[0]->locations_61) && empty($jawa_barat[0]->locations_63) && empty($jawa_barat[0]->locations_95) && empty($jawa_barat[0]->locations_97)) {
             $message .= "Tidak ada data hujan untuk Jawa Barat hari ini.";
         }
 
@@ -107,12 +123,24 @@ class NotifHujan extends Command
             $message .= "Hujan Lebat di " . $count_63 ." lokasi\n";
         }
 
+        if (!empty($jawa_tengah[0]->locations_95)) {
+            $locations_95 = explode(",", $jawa_tengah[0]->locations_95);
+            $count_95 = count($locations_95);
+            $message .= "Hujan Lebat di " . $count_95 ." lokasi\n";
+        }
+
+        if (!empty($jawa_tengah[0]->locations_97)) {
+            $locations_97 = explode(",", $jawa_tengah[0]->locations_97);
+            $count_97 = count($locations_97);
+            $message .= "Hujan Lebat di " . $count_97 ." lokasi\n";
+        }
+
         // Jika tidak ada data yang ditemukan di Jawa Tengah, tambahkan pesan yang sesuai
-        if (empty($jawa_tengah[0]->locations_60) && empty($jawa_tengah[0]->locations_61) && empty($jawa_tengah[0]->locations_63)) {
+        if (empty($jawa_tengah[0]->locations_60) && empty($jawa_tengah[0]->locations_61) && empty($jawa_tengah[0]->locations_63) && empty($jawa_tengah[0]->locations_95) && empty($jawa_tengah[0]->locations_97)) {
             $message .= "Tidak ada data hujan untuk Jawa Tengah hari ini.";
         }
 
-        $message .= "\n\nInfo lengkap: http://infocuaca.bbwscitanduy.id/dashboard/jabar\n";
+        $message .= "\n\nInfo lengkap: https://infocuaca.bbwscitanduy.id/dashboard/jabar\n";
         $message .= "Sumber data: https://data.bmkg.go.id/csv/";
 
        $response = Http::timeout(30)->get("https://jogja.wablas.com/api/send-message", [

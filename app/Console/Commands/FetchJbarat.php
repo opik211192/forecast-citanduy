@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
-use League\Csv\Reader;
-use App\Models\ApiBarat;
+use Exception;
 use App\Models\Hujan;
 use App\Models\Lokasi;
+use League\Csv\Reader;
+use App\Models\ApiBarat;
+use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
-use Exception;
 
 class FetchJbarat extends Command
 {
@@ -89,6 +90,7 @@ class FetchJbarat extends Command
                         'wind_direction' => $record[9],
                         'wind_speed' => $record[10],
                         'provinsi' => 'Jawa Barat',
+                        'last_modified' => Carbon::parse($response->header('last-modified'))->setTimezone('Asia/Jakarta')->toDateTimeString()
                     ]);
         
                     $jbaratData->save();
@@ -143,6 +145,16 @@ class FetchJbarat extends Command
 
             // Menambahkan log ketika retry sudah berhasil
             //Log::channel('single')->info('Retry berhasil dilakukan.');
+            //coba lakukan notif wa jika data gagal di tarik dari BMKG
+            $apiKey = '3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS';
+            $response = Http::timeout(120)
+                ->retry(3, 5000)
+                ->get("https://jogja.wablas.com/api/send-message", [
+                        'phone' => '6281223171795',
+                        'message' => "Gagal Narik Data Jawa Barat",
+                        'token' => $apiKey,
+                        'isGroup' => 'false',
+            ]);
         }
     }
 }

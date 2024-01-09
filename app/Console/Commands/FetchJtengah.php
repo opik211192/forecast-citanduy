@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Models\Hujan;
 use App\Models\Lokasi;
 use League\Csv\Reader;
 use App\Models\ApiTengah;
+use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
-use Exception;
 
 class FetchJtengah extends Command
 {
@@ -38,7 +39,8 @@ class FetchJtengah extends Command
         $retryDelay = 60; // Waktu penundaan antara percobaan (dalam detik)
 
          try {
-            
+           Log::channel('single')->info('Memulai proses import data Jawa Tengah.');
+        
            $response = Http::retry($maxRetries, $retryDelay)
                         ->timeout(20)
                         ->get("https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/CSV/kecamatanforecast-jawatengah.csv");
@@ -48,6 +50,12 @@ class FetchJtengah extends Command
             }
 
             $csvContent = $response->body();
+
+            // Check Last-Modified header for data update time
+            $lastModified = strtotime($response->header('Last-Modified')[0]);
+
+            // Bandingkan dengan waktu terakhir update di database
+            $lastUpdateTime = ApiTengah::max('timestamp');
             
             //$tempFile = tempnam(sys_get_temp_dir(), 'csv');
             $tempFile = storage_path('app/temp') . '/' . uniqid('csv_', true) . '.csv';
@@ -88,6 +96,7 @@ class FetchJtengah extends Command
                         'wind_direction' => $record[9],
                         'wind_speed' => $record[10],
                         'provinsi' => 'Jawa Tengah',
+                        'last_modified' => Carbon::parse($response->header('last-modified'))->setTimezone('Asia/Jakarta')->toDateTimeString(),
                     ]);
         
                     $jtengahData->save();
@@ -135,6 +144,17 @@ class FetchJtengah extends Command
 
             // Menambahkan log ketika retry sudah berhasil
             //Log::channel('single')->info('Retry berhasil dilakukan.');
+
+            //coba lakukan notif wa jika data gagal di tarik dari BMKG
+            $apiKey = '3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS';
+            $response = Http::timeout(120)
+                ->retry(3, 5000)
+                ->get("https://jogja.wablas.com/api/send-message", [
+                        'phone' => '6281223171795',
+                        'message' => "Gagal Narik Data Jawa Tengah",
+                        'token' => $apiKey,
+                        'isGroup' => 'false',
+            ]);
         }
     }
 }

@@ -52,9 +52,9 @@
                         $weatherCode = $dataByDate[$date]['weather_code_tertinggi'];
                         $weatherIcon = $weatherIcons[$weatherCode]['icon'];
                         $weatherTitle = $weatherIcons[$weatherCode]['title'];
-                        $iconUrl = asset("icon/$weatherIcon");
+                        $iconUrl = asset("icon/svg/$weatherIcon");
                         @endphp
-                        <img src="{{ $iconUrl }}" height="30px" width="30px" alt="{{ $weatherTitle }}"
+                        <img src="{{ $iconUrl }}" height="50px" width="50px" alt="{{ $weatherTitle }}"
                             title="{{ $weatherTitle }}">
                         @else
 

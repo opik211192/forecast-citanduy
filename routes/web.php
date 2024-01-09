@@ -1,15 +1,19 @@
 <?php
 
 use App\Models\Hujan;
+use App\Models\Lokasi;
+use App\Models\ApiBarat;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\CobaController;
+use App\Http\Controllers\HujanController;
 use App\Http\Controllers\ApiBaratController;
 use App\Http\Controllers\ApiTengahController;
 use App\Http\Controllers\DashboardBaratController;
 use App\Http\Controllers\DashboardTengahController;
-use App\Http\Controllers\HujanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +44,24 @@ Route::get('/', function () {
 
 //     dd($dataHujan);
         return redirect()->route('dashboard-jabar');
+});
+
+Route::get('/map', [MapController::class, 'index'])->name('map.index');
+Route::get('/data/jabar', [MapController::class, 'mapJabar'])->name('map.jabar');
+Route::get('/data/jateng', [MapController::class, 'mapJateng'])->name('map.jateng');
+
+
+Route::get('/coba-lagi', function(){
+    // $coba = ApiBarat::with(['jBarat'])->whereDate('created_at', '2023-10-12')->get();
+    // return response()->json($coba);
+    // $lokasi = Lokasi::all();
+    // $apiBarats = ApiBarat::whereIn('location', $lokasi->pluck('location'))->whereDate('created_at', '2023-10-12')->get();
+    // $lastUpdate = ApiBarat::orderBy('updated_at', 'desc')->first();
+    // dd($lastUpdate);
+     $response = Http::get("https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/CSV/kecamatanforecast-jawatengah.csv");
+
+    dd($response);
+
 });
 
 Route::get('/jabar', [ApiBaratController::class, 'index'])->name('jabar.index');

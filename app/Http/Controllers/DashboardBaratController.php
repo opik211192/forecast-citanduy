@@ -18,11 +18,20 @@ class DashboardBaratController extends Controller
 
         $today = Carbon::now()->format('Y-m-d');
         $yesterday = Carbon::now()->subDay()->format('Y-m-d');
+        $twoDaysAgo = Carbon::now()->subDays(2)->format('Y-m-d');
+
         //ini perubahannya jadi jam 12.14
         if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
              $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $yesterday)->get();
         } else {
             $dataToday = ApiBarat::with(['jawa_barat', 'weather'])->whereDate('created_at', $today)->get();
+        }
+
+        // Jika data kemarin juga tidak ada, coba tampilkan data dari dua hari sebelumnya
+        if ($dataToday->isEmpty() && $currentHour < 12) {
+            $dataToday = ApiBarat::with(['jawa_barat', 'weather'])
+                ->whereDate('created_at', $twoDaysAgo)
+                ->get();
         }
 
        
@@ -37,24 +46,24 @@ class DashboardBaratController extends Controller
 
 
         $weatherIcons = [
-            '0' => ['icon' => '100_cerah.png', 'title' => 'Cerah'],
-            '100' => ['icon' => '100_cerah.png', 'title' => 'Cerah'],
-            '1' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '101' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '2' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '102' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '3' => ['icon' => '103_berawan.png', 'title' => 'Berawan'],
-            '103' => ['icon' => '103_berawan.png', 'title' => 'Berawan'],
-            '4' => ['icon' => '104_berawan_tebal.png', 'title' => 'Berawan Tebal'],
-            '104' => ['icon' => '104_berawan_tebal.png', 'title' => 'Berawan Tebal'],
-            '5' => ['icon' => '5_udara_kabur.png', 'title' => 'Udara Kabur'],
-            '10' => ['icon' => '10_asap.png', 'title' => 'Asap'],
-            '45' => ['icon' => '45_kabut.png', 'title' => 'Kabut'],
-            '60' => ['icon' => '60_hujan_ringan.png', 'title' => 'Hujan Ringan'],
-            '61' => ['icon' => '61_hujan.png', 'title' => 'Hujan Sedang'],
-            '63' => ['icon' => '63_hujan_lebat.png', 'title' => 'Hujan Lebat'],
-            '95' => ['icon' => '95_97_hujan_petir.png', 'title' => 'Hujan Petir'],
-            '97' => ['icon' => '95_97_hujan_petir.png', 'title' => 'Hujan Petir'],
+            '0' => ['icon' => '100_cerah.svg', 'title' => 'Cerah'],
+            '100' => ['icon' => '100_cerah.svg', 'title' => 'Cerah'],
+            '1' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '101' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '2' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '102' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '3' => ['icon' => '103_berawan.svg', 'title' => 'Berawan'],
+            '103' => ['icon' => '103_berawan.svg', 'title' => 'Berawan'],
+            '4' => ['icon' => '104_berawan_tebal.svg', 'title' => 'Berawan Tebal'],
+            '104' => ['icon' => '104_berawan_tebal.svg', 'title' => 'Berawan Tebal'],
+            '5' => ['icon' => '5_udara_kabur.svg', 'title' => 'Udara Kabur'],
+            '10' => ['icon' => '10_asap.svg', 'title' => 'Asap'],
+            '45' => ['icon' => '45_kabut.svg', 'title' => 'Kabut'],
+            '60' => ['icon' => '60_hujan_ringan.svg', 'title' => 'Hujan Ringan'],
+            '61' => ['icon' => '61_hujan.svg', 'title' => 'Hujan Sedang'],
+            '63' => ['icon' => '63_hujan_lebat.svg', 'title' => 'Hujan Lebat'],
+            '95' => ['icon' => '95_97_hujan_petir.svg', 'title' => 'Hujan Petir'],
+            '97' => ['icon' => '95_97_hujan_petir.svg', 'title' => 'Hujan Petir'],
 
         ];
 
@@ -137,24 +146,24 @@ class DashboardBaratController extends Controller
         $hoursInDay = range(0, 21, 3);
 
         $weatherIcons = [
-            '0' => ['icon' => '100_cerah.png', 'title' => 'Cerah'],
-            '100' => ['icon' => '100_cerah.png', 'title' => 'Cerah'],
-            '1' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '101' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '2' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '102' => ['icon' => '101_102_cerah_berawan.png', 'title' => 'Cerah Berawan'],
-            '3' => ['icon' => '103_berawan.png', 'title' => 'Berawan'],
-            '103' => ['icon' => '103_berawan.png', 'title' => 'Berawan'],
-            '4' => ['icon' => '104_berawan_tebal.png', 'title' => 'Berawan Tebal'],
-            '104' => ['icon' => '104_berawan_tebal.png', 'title' => 'Berawan Tebal'],
-            '5' => ['icon' => '5_udara_kabur.png', 'title' => 'Udara Kabur'],
-            '10' => ['icon' => '10_asap.png', 'title' => 'Asap'],
-            '45' => ['icon' => '45_kabut.png', 'title' => 'Kabut'],
-            '60' => ['icon' => '60_hujan_ringan.png', 'title' => 'Hujan Ringan'],
-            '61' => ['icon' => '61_hujan.png', 'title' => 'Hujan Sedang'],
-            '63' => ['icon' => '63_hujan_lebat.png', 'title' => 'Hujan Lebat'],
-            '95' => ['icon' => '95_97_hujan_petir.png', 'title' => 'Hujan Petir'],
-            '97' => ['icon' => '95_97_hujan_petir.png', 'title' => 'Hujan Petir'],
+            '0' => ['icon' => '100_cerah.svg', 'title' => 'Cerah'],
+            '100' => ['icon' => '100_cerah.svg', 'title' => 'Cerah'],
+            '1' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '101' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '2' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '102' => ['icon' => '101_102_cerah_berawan.svg', 'title' => 'Cerah Berawan'],
+            '3' => ['icon' => '103_berawan.svg', 'title' => 'Berawan'],
+            '103' => ['icon' => '103_berawan.svg', 'title' => 'Berawan'],
+            '4' => ['icon' => '104_berawan_tebal.svg', 'title' => 'Berawan Tebal'],
+            '104' => ['icon' => '104_berawan_tebal.svg', 'title' => 'Berawan Tebal'],
+            '5' => ['icon' => '5_udara_kabur.svg', 'title' => 'Udara Kabur'],
+            '10' => ['icon' => '10_asap.svg', 'title' => 'Asap'],
+            '45' => ['icon' => '45_kabut.svg', 'title' => 'Kabut'],
+            '60' => ['icon' => '60_hujan_ringan.svg', 'title' => 'Hujan Ringan'],
+            '61' => ['icon' => '61_hujan.svg', 'title' => 'Hujan Sedang'],
+            '63' => ['icon' => '63_hujan_lebat.svg', 'title' => 'Hujan Lebat'],
+            '95' => ['icon' => '95_97_hujan_petir.svg', 'title' => 'Hujan Petir'],
+            '97' => ['icon' => '95_97_hujan_petir.svg', 'title' => 'Hujan Petir'],
 
         ];
 

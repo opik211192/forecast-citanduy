@@ -33,4 +33,9 @@ class ApiTengah extends Model
     {
         return Carbon::parse($this->attributes['timestamp'])->format('d-m-Y H:i:s');
     }
+
+    public function jTengah()
+    {
+        return $this->hasOne(Jtengah::class, 'location', 'location');
+    }
 }

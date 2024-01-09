@@ -553,7 +553,7 @@ class LokasiSeeder extends Seeder
             'kabupaten' => 'Kabupaten Tasikmalaya',
             'kecamatan' => 'Cigalontang',
             'latitude' => -7.295,
-            'longitude' => 108.938,
+            'longitude' => 107.938,
         ]);
 
 

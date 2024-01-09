@@ -33,4 +33,9 @@ class ApiBarat extends Model
     {
         return Carbon::parse($this->attributes['timestamp'])->format('d-m-Y H:i:s');
     }
+
+    public function Jbarat()
+    {
+        return $this->hasOne(Jbarat::class, 'location', 'location');
+    }
 }

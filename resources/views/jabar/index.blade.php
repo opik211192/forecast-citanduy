@@ -68,10 +68,10 @@
                     $weatherIconData = $weatherData['weather_icon'];
                     $weatherIcon = $weatherIconData['icon'];
                     $weatherTitle = $weatherIconData['title'];
-                    $iconUrl = asset("icon/$weatherIcon");
+                    $iconUrl = asset("icon/svg/$weatherIcon");
                     @endphp
 
-                    <img src="{{ $iconUrl }}" height="30px" width="30px" alt="Weather Icon" title="{{ $weatherTitle }}">
+                    <img src="{{ $iconUrl }}" height="50px" width="50px" alt="Weather Icon" title="{{ $weatherTitle }}">
                     @endif
                 </td>
                 @endforeach

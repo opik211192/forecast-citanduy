@@ -186,7 +186,7 @@
 
           $.ajax({
                 type: "POST",
-                url: '{{ route("api.cari.jateng") }}',
+                url: 'https://infocuaca.bbwscitanduy.id/api/lokasi/jateng/cari',
                 data: {
                     kabupaten: selectedKabupaten
                 },
@@ -309,8 +309,8 @@
                                             
                                             // Mendapatkan ID lokasi dari elemen
                                             var idLocation = $(this).data('idLocation');
-                                            var apiUrl = `{{ route('api.count.jateng', ['location' => 'dummy']) }}`.replace('dummy', idLocation);
-
+                                            //var apiUrl = `{{ route('api.count.jateng', ['location' => 'dummy']) }}`.replace('dummy', idLocation);
+                                            var apiUrl = `https://infocuaca.bbwscitanduy.id/api/lokasi/jateng/count/${idLocation}`;
                                             try {
                                                 const response = await fetch(apiUrl);
                                                 if (!response.ok) {

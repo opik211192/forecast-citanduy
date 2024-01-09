@@ -195,7 +195,7 @@
 
             $.ajax({
                 type: "POST",
-                url: '{{ route("api.cari.jabar") }}',
+                url: 'https://infocuaca.bbwscitanduy.id/api/lokasi/jabar/cari',
                 data: {
                     kabupaten: selectedKabupaten
                 },
@@ -320,8 +320,8 @@
                                             
                                             // Mendapatkan ID lokasi dari elemen
                                             var idLocation = $(this).data('idLocation');
-                                            var apiUrl = `{{ route('api.count.jabar', ['location' => 'dummy']) }}`.replace('dummy', idLocation);
-
+                                            //var apiUrl = `{{ route('api.count.jabar', ['location' => 'dummy']) }}`.replace('dummy', idLocation);
+                                            var apiUrl = `https://infocuaca.bbwscitanduy.id/api/lokasi/jabar/count/${idLocation}`;
                                             try {
                                                 const response = await fetch(apiUrl);
                                                 if (!response.ok) {

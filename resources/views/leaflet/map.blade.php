@@ -332,7 +332,8 @@
         // Menunjukkan elemen loading di dalam drawer
         document.getElementById('loadingOverlay').style.display = 'block';
         try {
-            const apiUrl = `{{ route('api.lokasi.detail', ['location' => 'dummy']) }}`.replace('dummy', location);
+            //const apiUrl = `{{ route('api.lokasi.detail', ['location' => 'dummy']) }}`.replace('dummy', location);
+            const apiUrl = `https://infocuaca.bbwscitanduy.id/api/lokasi/location/${location}`;
             const response = await axios.get(apiUrl);
             const detailData = response.data;
 
@@ -576,7 +577,8 @@
     const fetchDataLocation = async () => {
         //toggleSpinner(true);
         try {
-            const apiUrl = "{{ route('api.lokasi.index') }}";
+            //const apiUrl = "{{ route('api.lokasi.index') }}";
+            const apiUrl = `https://infocuaca.bbwscitanduy.id/api/lokasi`
             const response = await axios.get(apiUrl);
             const datas = response.data.data;
 

@@ -257,8 +257,8 @@
     //     })
 </script>
 <script>
-    const lat = -1.215806;
-    const lng = 115.5746999;
+    const lat = -7.1168155;
+    const lng = 108.5551111;
 
 
     const peta1 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -275,7 +275,7 @@
     //const map = L.map('map').setView([lat, lng], 4.5);
     const map = L.map('map', {
         center: [lat, lng],
-        zoom : 5,
+        zoom : 8,
         layers: [peta1],
         zoomControl: false,
     });
@@ -541,8 +541,8 @@
 
         // Judul dan isi deskripsi
         const pairs = [
-            ['Provinsi', dataDeskripsi.provinsi],
             ['Kecamatan', dataDeskripsi.kecamatan],
+            ['Provinsi', dataDeskripsi.provinsi],
             ['Kabupaten/Kota', dataDeskripsi.kabupaten],
             ['Latitude', dataDeskripsi.latitude],
             ['Longitude', dataDeskripsi.longitude],
@@ -551,10 +551,12 @@
         pairs.forEach(pair => {
             const dtElement = document.createElement('dt');
             dtElement.textContent = pair[0];
+            dtElement.classList.add('fw-bold');
 
             const ddElement = document.createElement('dd');
             ddElement.textContent = pair[1];
 
+            
             // Menambahkan elemen judul dan isi ke dalam <dl>
             dlElement.appendChild(dtElement);
             dlElement.appendChild(ddElement);

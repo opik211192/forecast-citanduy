@@ -50,12 +50,10 @@ class FetchJtengah extends Command
             }
 
             $lastModifiedBMKG = Carbon::parse($response->header('last-modified'))->setTimezone('Asia/Jakarta')->toDateString();
-            $lastModifiedDatabase = Carbon::parse(ApiTengah::max('last_modified'))->toDateString();
+            //$lastModifiedDatabase = Carbon::parse(ApiTengah::max('last_modified'))->toDateString();
+            $lastModifiedDatabase = ApiTengah::max('last_modified');
 
-            if ($lastModifiedDatabase >= $lastModifiedBMKG) {
-                Log::channel('single')->warning('Data Jawa Tengah di BMKG belum diperbaharui');
-                return;
-            }else{
+            if (is_null($lastModifiedDatabase) || $lastModifiedDatabase < $lastModifiedBMKG) {
                 $csvContent = $response->body();
 
                 // Check Last-Modified header for data update time
@@ -138,6 +136,9 @@ class FetchJtengah extends Command
                 unlink($tempFile);
 
                 Log::channel('single')->info('Proses Data impor Jawa Tengah berhasil.');
+            }else{
+                 Log::channel('single')->warning('Data Jawa Tengah di BMKG belum diperbaharui');
+                return;
             }
 
         } catch (\Exception $e) {

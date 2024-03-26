@@ -63,17 +63,20 @@ Route::get('/coba-lagi', function(){
     //dd($response);
     //dd($response->header('last-modified'));
     $lastModifiedBMKG = Carbon::parse($response->header('last-modified'))->setTimezone('Asia/Jakarta')->toDateString();
-    //$lastModifiedBMKG = '2024-01-12';
+    //$lastModifiedBMKG = '2024-03-27';
 
 
-    $lastModifiedDatabase = Carbon::parse(ApiBarat::max('last_modified'))->toDateString();
+    //$lastModifiedDatabase = Carbon::parse(ApiBarat::max('last_modified'))->toDateString();
+    //$lastModifiedDatabase = null;
+    $lastModifiedDatabase = ApiBarat::max('last_modified');
 
+    dd($lastModifiedDatabase);
     //dd($lastModifiedBMKG);
     //dd($lastModifiedDatabase);
-    if ($lastModifiedDatabase >= $lastModifiedBMKG) {
-        echo "tidak disimpan";
+    if ($lastModifiedDatabase == $lastModifiedBMKG) {
+        echo "BMKG : $lastModifiedBMKG <br> DATABSE: $lastModifiedDatabase <br> data tidak disimpan";
     }else {
-        echo "simpan data baru";
+        echo "BMKG : $lastModifiedBMKG <br> DATABSE: $lastModifiedDatabase <br> simpan data baru";
         //maka simpan data di database dan update view di halaman cuaca nya
     }
     

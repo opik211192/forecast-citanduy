@@ -34,9 +34,16 @@ class DashboardBaratController extends Controller
         //         ->get();
         // }
         // Ambil semua data dengan last-modified sama dengan hari ini
-$dataToday = ApiBarat::with(['jawa_barat', 'weather'])
-    ->whereDate('last_modified', $today)
-    ->get();
+ $dataTodayQuery = ApiBarat::with(['jawa_barat', 'weather'])
+        ->whereDate('last_modified', $today);
+
+        if (!empty($kabupaten)) {
+            $dataTodayQuery->leftJoin('lokasis as b', 'api.barats.location', '=', 'b.location')
+                ->whereDate('api.barats.last_modified', $today)
+                ->where('b.kabupaten', $kabupaten);
+        }
+
+        $dataToday = $dataTodayQuery->get();
 
 // Jika tidak ada data yang last-modified sama dengan hari ini
 if ($dataToday->isEmpty()) {

@@ -31,11 +31,24 @@ class NotifHujan extends Command
      */
     public function handle()
     {
+        //-------------------WABLAS---------------------------------
         //$phone = '6281223171795';
         //$phone = env('WABLAS_PHONE');
-        $phone = '120363169063128335';
+        //$phone = '120363169063128335';
         //$apiKey = env('WABLAS_API_KEY');
-        $apiKey = '3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS';
+        //$apiKey = '3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS';
+
+        //-------------------WATZAP GROUP Watzap api---------------------------------
+        // $apiKey = 'RTUFBIWTSPVDXQHV';
+        // $number_key = 'vebd5mseyZvRUEyx';
+        // $group_id = '120363252969129914@g.us';
+
+        //-------------------WATZAP GROUP infocuaca citanduy---------------------------------
+        $apiKey = 'RTUFBIWTSPVDXQHV';
+        $number_key = 'vebd5mseyZvRUEyx';
+        $group_id = '120363169063128335@g.us';
+
+
         $today = Carbon::now();
         $futureDate = $today->copy()->addDays(6);
 
@@ -144,13 +157,22 @@ class NotifHujan extends Command
         $message .= "\n\nInfo lengkap: https://infocuaca.bbwscitanduy.id\n";
         $message .= "Sumber data: https://data.bmkg.go.id/csv/";
 
-       $response = Http::timeout(120)
+    //    $response = Http::timeout(120)
+    //    ->retry(3, 5000)
+    //    ->get("https://jogja.wablas.com/api/send-message", [
+    //         'phone' => $phone,
+    //         'message' => $message,
+    //         'token' => $apiKey,
+    //         'isGroup' => 'true',
+    //     ]);
+
+         $response = Http::timeout(120)
        ->retry(3, 5000)
-       ->get("https://jogja.wablas.com/api/send-message", [
-            'phone' => $phone,
+       ->post("https://api.watzap.id/v1/send_message_group", [
+            'api_key' => $apiKey,
+            'number_key' => $number_key,
+            'group_id' => $group_id,
             'message' => $message,
-            'token' => $apiKey,
-            'isGroup' => 'true',
         ]);
 
         if ($response->successful()) {

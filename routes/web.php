@@ -60,8 +60,23 @@ Route::get('/coba-lagi', function(){
     // dd($lastUpdate);
      $response = Http::get("https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/CSV/kecamatanforecast-jawatengah.csv");
 
-    dd($response);
+    //dd($response);
+    //dd($response->header('last-modified'));
+    $lastModifiedBMKG = Carbon::parse($response->header('last-modified'))->setTimezone('Asia/Jakarta')->toDateString();
+    //$lastModifiedBMKG = '2024-01-12';
 
+
+    $lastModifiedDatabase = Carbon::parse(ApiBarat::max('last_modified'))->toDateString();
+
+    //dd($lastModifiedBMKG);
+    //dd($lastModifiedDatabase);
+    if ($lastModifiedDatabase >= $lastModifiedBMKG) {
+        echo "tidak disimpan";
+    }else {
+        echo "simpan data baru";
+        //maka simpan data di database dan update view di halaman cuaca nya
+    }
+    
 });
 
 Route::get('/jabar', [ApiBaratController::class, 'index'])->name('jabar.index');

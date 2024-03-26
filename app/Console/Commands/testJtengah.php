@@ -12,36 +12,36 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
-class FetchJtengah extends Command
+class testJtengah extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'fetch-jtengah';
+    protected $signature = 'test-jtengah';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'penarikan data cuaca jawa tengah';
+    protected $description = 'ambil data jawa tengah';
 
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+   public function handle()
     {
         $maxRetries = 3; // Jumlah maksimum percobaan
         $retryDelay = 60; // Waktu penundaan antara percobaan (dalam detik)
 
-         try {
-           Log::channel('single')->info('Memulai proses import data Jawa Tengah.');
-        
-           $response = Http::retry($maxRetries, $retryDelay)
+        try {
+            Log::channel('single')->info('test import data Jawa tengah.');
+            
+            $response = Http::retry($maxRetries, $retryDelay)
                         ->timeout(20)
                         ->get("https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/CSV/kecamatanforecast-jawatengah.csv");
 
@@ -49,37 +49,26 @@ class FetchJtengah extends Command
                 throw new Exception('Gagal mengambil file CSV.');
             }
 
-            $lastModifiedBMKG = Carbon::parse($response->header('last-modified'))->setTimezone('Asia/Jakarta')->toDateString();
-            $lastModifiedDatabase = Carbon::parse(ApiTengah::max('last_modified'))->toDateString();
+              $lastModifiedBMKG = Carbon::parse($response->header('last-modified'))->setTimezone('Asia/Jakarta')->toDateString();
 
-            if ($lastModifiedDatabase >= $lastModifiedBMKG) {
-                Log::channel('single')->warning('Data Jawa Tengah di BMKG belum diperbaharui');
-                return;
-            }else{
-                $csvContent = $response->body();
+             $csvContent = $response->body();
 
-                // Check Last-Modified header for data update time
-                $lastModified = strtotime($response->header('Last-Modified')[0]);
-
-                // Bandingkan dengan waktu terakhir update di database
-                $lastUpdateTime = ApiTengah::max('timestamp');
-                
                 //$tempFile = tempnam(sys_get_temp_dir(), 'csv');
                 $tempFile = storage_path('app/temp') . '/' . uniqid('csv_', true) . '.csv';
                 file_put_contents($tempFile, $csvContent);
-                
+
                 $csv = Reader::createFromPath($tempFile, 'r');
                 $csv->setDelimiter(';');
-                
+
                 $data = $csv->getRecords();
                 
-                //$dataJawaTengah = Jtengah::pluck('location')->toArray();
+                //$dataJawaBarat = Jbarat::pluck('location')->toArray();
                 $dataJawaTengah = Lokasi::where('provinsi', 'Jawa Tengah')->pluck('location')->toArray();
 
-                
+
                 $hasValidWeatherData = false;
-                $hasLoggedHujan = false;
-                
+                $hasLoggedHujan = false; // Variabel untuk melacak apakah log sudah ditampilkan
+
                 foreach ($data as $record) {
                     $location = $record[0];
                     $timestamp = $record[1];
@@ -127,6 +116,7 @@ class FetchJtengah extends Command
                         }
                     }
 
+
                 }
 
                 if (!$hasValidWeatherData) {
@@ -138,44 +128,8 @@ class FetchJtengah extends Command
                 unlink($tempFile);
 
                 Log::channel('single')->info('Proses Data impor Jawa Tengah berhasil.');
-            }
-
-        } catch (\Exception $e) {
-            // Tangani error dan log pesan error
-            Log::channel('single')->error('Proses impor data Jawa Tengah error: ' . $e->getMessage());
-
-            Log::channel('single')->error('Maksimum percobaan telah tercapai. Tidak dapat mengimpor data.');
-
-
-            // Menjadwalkan ulang perintah untuk dieksekusi dalam 30 menit (1800 detik)
-            //$this->retry(1800);
-
-            // Menambahkan log ketika retry sudah berhasil
-            //Log::channel('single')->info('Retry berhasil dilakukan.');
-
-            //coba lakukan notif wa jika data gagal di tarik dari BMKG
-            // $apiKey = '3iueLF2v895BJJcAFiUTXb7qard7Av0PaVNWKGxqGYTLAaq98kvlk8SIunpdpgGS';
-            // $response = Http::timeout(120)
-            //     ->retry(3, 5000)
-            //     ->get("https://jogja.wablas.com/api/send-message", [
-            //             'phone' => '6281223171795',
-            //             'message' => "Gagal Narik Data Jawa Tengah",
-            //             'token' => $apiKey,
-            //             'isGroup' => 'false',
-            // ]);
-
-            $apiKey = 'RTUFBIWTSPVDXQHV';
-            $number_key = 'vebd5mseyZvRUEyx';
-            $phone_no = '6281223171795';
-
-             $response = Http::timeout(120)
-            ->retry(3, 5000)
-            ->post("https://api.watzap.id/v1/send_message", [
-                    'api_key' => $apiKey,
-                    'number_key' => $number_key,
-                    'phone_no' => $phone_no,
-                    'message' => 'Gagal Narik Data Jawa Tengah',
-                ]);
+        }catch(\Exception $e){
+            Log::error("error test jawa tengah");
         }
     }
 }

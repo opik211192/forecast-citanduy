@@ -20,20 +20,42 @@ class DashboardTengahController extends Controller
         $yesterday = Carbon::now()->subDay()->format('Y-m-d');
         $twoDaysAgo = Carbon::now()->subDays(2)->format('Y-m-d');
         
-         //ini perubahannya jadi jam 12.14
-        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
-            $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $yesterday)->get();
-        } else {
-            $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $today)->get();
+        //  //ini perubahannya jadi jam 12.14
+        // if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+        //     $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $yesterday)->get();
+        // } else {
+        //     $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])->whereDate('created_at', $today)->get();
+        // }
+
+        //  // Jika data kemarin juga tidak ada, coba tampilkan data dari dua hari sebelumnya
+        // if ($dataToday->isEmpty() && $currentHour < 12) {
+        //     $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
+        //         ->whereDate('created_at', $twoDaysAgo)
+        //         ->get();
+        // }
+         $dataTodayQuery = ApiTengah::with(['jawa_tengah', 'weather'])
+        ->whereDate('last_modified', $today);
+
+        if (!empty($kabupaten)) {
+            $dataTodayQuery->leftJoin('lokasis as b', 'api.tengahs.location', '=', 'b.location')
+                ->whereDate('api.tengahs.last_modified', $today)
+                ->where('b.kabupaten', $kabupaten);
         }
 
-         // Jika data kemarin juga tidak ada, coba tampilkan data dari dua hari sebelumnya
-        if ($dataToday->isEmpty() && $currentHour < 12) {
+        $dataToday = $dataTodayQuery->get();
+
+        if ($dataToday->isEmpty()) {
+            $lastModifiedDates = ApiTengah::select('last_modified')
+                ->orderBy('last_modified', 'desc')
+                ->distinct()
+                ->pluck('last_modified');
+
+            $latestLastModified = $lastModifiedDates->first();
+
             $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
-                ->whereDate('created_at', $twoDaysAgo)
+                ->whereDate('last_modified', $latestLastModified)
                 ->get();
         }
-
         $kabupatenList = Lokasi::where('provinsi', 'Jawa Tengah')
                         ->distinct()
                         ->pluck('kabupaten');
@@ -112,32 +134,66 @@ class DashboardTengahController extends Controller
         $today = Carbon::now()->format('Y-m-d');
         $yesterday = Carbon::now()->subDay()->format('Y-m-d');
 
-        if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
-            $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
-                ->whereDate('created_at', $yesterday);
-        }else {
-            $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
-                ->whereDate('created_at', $today);
-        }
+        // if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+        //     $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
+        //         ->whereDate('created_at', $yesterday);
+        // }else {
+        //     $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
+        //         ->whereDate('created_at', $today);
+        // }
 
-        if (!empty($kabupaten)) {
-            if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
-                 $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
-                ->leftJoin('lokasis as b', 'api_tengahs.location', '=', 'b.location')
-                ->whereDate('api_tengahs.created_at', $yesterday)
-                ->where('b.kabupaten', $kabupaten);
-            }else{
-                $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
-               ->leftJoin('lokasis as b', 'api_tengahs.location', '=', 'b.location')
-               ->whereDate('api_tengahs.created_at', $today)
-               ->where('b.kabupaten', $kabupaten);
+        // if (!empty($kabupaten)) {
+        //     if ($currentHour < 12 || ($currentHour == 12 && $currentMinute < 14)) {
+        //          $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
+        //         ->leftJoin('lokasis as b', 'api_tengahs.location', '=', 'b.location')
+        //         ->whereDate('api_tengahs.created_at', $yesterday)
+        //         ->where('b.kabupaten', $kabupaten);
+        //     }else{
+        //         $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
+        //        ->leftJoin('lokasis as b', 'api_tengahs.location', '=', 'b.location')
+        //        ->whereDate('api_tengahs.created_at', $today)
+        //        ->where('b.kabupaten', $kabupaten);
 
-            }
+        //     }
             
+        // }
+
+        // $dataToday = $dataToday->get();
+        
+        // Query untuk mencari data hari ini
+        $dataTodayQuery = ApiTengah::with(['jawa_tengah', 'weather'])
+            ->whereDate('last_modified', $today);
+
+        // Jika ada kabupaten yang dipilih, tambahkan kondisi untuk kabupaten
+        if (!empty($kabupaten)) {
+            $dataTodayQuery->leftJoin('lokasis as b', 'api_tengahs.location', '=', 'b.location')
+                ->where('b.kabupaten', $kabupaten);
         }
 
-        $dataToday = $dataToday->get();
-        
+        // Ambil data hari ini berdasarkan query yang telah dibuat
+        $dataToday = $dataTodayQuery->get();
+
+        // Jika tidak ada data hari ini atau data untuk kabupaten tertentu, ambil data dengan last-modified terakhir
+        if ($dataToday->isEmpty()) {
+            // Ambil tanggal last-modified terbaru
+            $latestLastModified = ApiTengah::select('last_modified')
+                ->orderBy('last_modified', 'desc')
+                ->distinct()
+                ->first();
+
+            // Ambil data dengan last-modified terbaru
+            $dataToday = ApiTengah::with(['jawa_tengah', 'weather'])
+                ->whereDate('last_modified', $latestLastModified->last_modified);
+
+            // Jika ada kabupaten yang dipilih, tambahkan kondisi untuk kabupaten
+            if (!empty($kabupaten)) {
+                $dataToday->leftJoin('lokasis as b', 'api_tengahs.location', '=', 'b.location')
+                    ->where('b.kabupaten', $kabupaten);
+            }
+
+            $dataToday = $dataToday->get();
+        }
+
         $groupedData = [];
         $uniqueDates = [];
         $hoursInDay = range(0, 21, 3);

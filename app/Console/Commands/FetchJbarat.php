@@ -53,8 +53,8 @@ class FetchJbarat extends Command
             //$lastModifiedDatabase = Carbon::parse(ApiBarat::max('last_modified'))->toDateString();
             $lastModifiedDatabase = ApiBarat::max('last_modified');
 
-        //    if (is_null($lastModifiedDatabase) || $lastModifiedDatabase < $lastModifiedBMKG) {
-            if (true) {
+            if (is_null($lastModifiedDatabase) || $lastModifiedDatabase < $lastModifiedBMKG) {
+            // if (true) {
                 $csvContent = $response->body();
 
                 //$tempFile = tempnam(sys_get_temp_dir(), 'csv');
